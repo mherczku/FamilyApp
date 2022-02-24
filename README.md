@@ -1,4 +1,4 @@
-# FamilyApp
+# FamilyApp -> Aktuális verzió / féléves munka a develop ágon megy
 
 # **Családi szervező mobil fullstack alkalmazás (Mobil Fronted része)**
 
