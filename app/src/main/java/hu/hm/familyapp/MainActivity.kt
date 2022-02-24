@@ -32,3 +32,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+@Composable
+fun ActivityScreen(){}
