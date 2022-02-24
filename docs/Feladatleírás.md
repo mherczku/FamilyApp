@@ -1,6 +1,4 @@
-# FamilyApp -> Aktuális verzió / féléves munka a ezen ágon megy
-
-# **Családi szervező mobil fullstack alkalmazás (Mobil Frontend része)**
+# **Családi szervező mobil fullstack alkalmazás**
 
 #### **Téma leírása:** 
 
@@ -16,5 +14,3 @@ A fontosabb funkciók:
 A téma magában foglalja az adatmodell, kommunikációs protokoll, szerver oldali végpontok tervezését és megvalósítását, illetve mobil oldalon alkalmazás architektúra tervezés és megvalósítását, képernyőtervek alapján UI készítését is.
 
 forrás: https://www.aut.bme.hu/Task/21-22-tavasz/Csaladi-szervezo-mobil-fullstack
-
-backend URL: - 
