@@ -1,6 +1,6 @@
 # FamilyApp
 
-# **Családi szervező mobil fullstack alkalmazás**
+# **Családi szervező mobil fullstack alkalmazás (Mobil Fronted része)**
 
 #### **Téma leírása:** 
 
