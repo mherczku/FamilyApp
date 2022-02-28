@@ -5,19 +5,19 @@
 - Családtag felvétel, meghívó küldés
 - Bevásárlólista készítés, szerkesztés, listaelem "kipipálás", megosztás családon belül
 - Profil (felhasználó / család) testreszabás  (Név, Kép, Tel...)
-- ?? Későbbi terv: Esemény létrehozása, szerkesztés, meghívás, elfogadás &#8594; Közös naptár
+- (Későbbi terv: Esemény létrehozása, szerkesztés, meghívás, elfogadás &#8594; Közös naptár)
 
-### Felület MockUp: - készül
+### Felület terv (Wireframes): - Bevásárló list hiányzik
 
 Bejelentkezési felület:
 
-![LoginScreen](https://raw.githubusercontent.com/mherczku/FamilyApp/develop/docs/img/LoginScreen.png)
+![LoginScreen](https://raw.githubusercontent.com/mherczku/FamilyApp/develop/docs/img/wireframes.png)
 
 https://mockflow.com/
 
 
 
-#### Előzetes terv (konzulens): 
+#### Előzetes terv (sketch - konzulens): 
 ![Előzetes terv](https://raw.githubusercontent.com/mherczku/FamilyApp/develop/docs/img/rajzolt_terv.jpg)
 
 
