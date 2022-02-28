@@ -25,4 +25,9 @@ https://mockflow.com/
 ### Architektúra:
 
 - MVVM
-- Dependency Injection = Hilt
+
+- with Dependency Injection = Hilt
+
+  ![Előzetes terv](https://raw.githubusercontent.com/mherczku/FamilyApp/develop/docs/img/architecture.png)
+
+  https://mockflow.com/
