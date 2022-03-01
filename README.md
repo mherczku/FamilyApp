@@ -1,4 +1,4 @@
-# FamilyApp -> Aktuális verzió / féléves munka a ezen ágon megy
+# FamilyApp -> Aktuális verzió / féléves munka ezen az ágon megy
 
 # **Családi szervező mobil fullstack alkalmazás (Mobil Frontend része)**
 
@@ -17,4 +17,4 @@ A téma magában foglalja az adatmodell, kommunikációs protokoll, szerver olda
 
 forrás: https://www.aut.bme.hu/Task/21-22-tavasz/Csaladi-szervezo-mobil-fullstack
 
-backend URL: - 
+backend URL: - (https://github.com/VPeterB/family-app-backend)
