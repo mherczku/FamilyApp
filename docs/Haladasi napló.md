@@ -17,7 +17,7 @@
 ### Harmadik hét:
 
 - [x] Adatmodellek egyeztetése backend-del
-- [ ] Elérési pontok egyeztetése backend-del
+- [x] Elérési pontok egyeztetése backend-del
 - [x] Architektúra terv
 - [x] UI készítése Login, Register
 
