@@ -166,7 +166,7 @@ fun RegisterScreen(
             modifier = Modifier
                 .padding(bottom = 20.dp)
                 .align(Alignment.CenterHorizontally),
-            onClick = { navController.navigate(NavScreen.Login.route) }
+            onClick = { navController.popBackStack() }
         )
 
     }

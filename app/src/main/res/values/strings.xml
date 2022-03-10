@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FamilyApp</string>
+    <string name="create_new_family">Create new family</string>
+    <string name="join_family">Join family</string>
 </resources>

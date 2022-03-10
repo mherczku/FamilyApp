@@ -8,6 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import hu.hm.familyapp.ui.screens.login.LoginScreen
 import hu.hm.familyapp.ui.screens.register.RegisterScreen
+import hu.hm.familyapp.ui.screens.settings.FamilyScreen
+import hu.hm.familyapp.ui.screens.settings.ProfileScreen
 import hu.hm.familyapp.ui.theme.FamilyAppTheme
 
 @Composable
@@ -26,7 +28,7 @@ fun ActivityScreen() {
             }
 
             composable(NavScreen.Home.route) {
-                //HomeScreen(navController)
+                FamilyScreen(navController)
             }
         }
     }
