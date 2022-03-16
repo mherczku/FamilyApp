@@ -1,15 +1,15 @@
 package hu.hm.familyapp.data.model
 
 data class User(
-    val id: String,
-    val password: String,
-    val email: String,
-    val username: String,
-    val lastname: String,
-    val firstname: String,
-    val phoneNumber: String,
-    val profilePicture: String,
-    val categoryID: String, // !
+    val id: String = "testID",
+    val password: String = "testPass",
+    val email: String = "test@test.hu",
+    val username: String = "TestUser",
+    val lastname: String = "Testing",
+    val firstname: String = "Tester",
+    val phoneNumber: String = "06701234567",
+    val profilePicture: String = "",
+    val categoryID: String = "cat1", // !
 
-    val shoppingListsID: List<String>
+    val shoppingListsID: List<String> = listOf("0", "1")
 )

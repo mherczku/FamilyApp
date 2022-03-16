@@ -29,6 +29,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import hu.hm.familyapp.R
+import hu.hm.familyapp.ui.navigation.NavScreen
 
 @Preview
 @Composable
@@ -38,14 +39,14 @@ fun FamilyScreen(
 ) {
 
     if (viewModel.hasFamily.value) {
-        HasFamily(viewModel)
+        HasFamily(viewModel, navController)
     } else {
         NoFamily(viewModel)
     }
 }
 
 @Composable
-fun HasFamily(viewModel: FamilyViewModel) {
+fun HasFamily(viewModel: FamilyViewModel, navController: NavController) {
 
     Column(
         modifier = Modifier
@@ -73,7 +74,7 @@ fun HasFamily(viewModel: FamilyViewModel) {
             fontSize = 30.sp,
         )
         viewModel.adults.forEach { adult ->
-            NameCard(adult)
+            NameCard(adult, navController)
         }
         Divider(Modifier.padding(vertical = 8.dp))
         Text(
@@ -84,7 +85,7 @@ fun HasFamily(viewModel: FamilyViewModel) {
             fontSize = 30.sp,
         )
         viewModel.children.forEach { child ->
-            NameCard(child)
+            NameCard(child, navController)
         }
         Divider(Modifier.padding(vertical = 8.dp))
         Text(
@@ -95,14 +96,13 @@ fun HasFamily(viewModel: FamilyViewModel) {
             fontSize = 30.sp,
         )
         viewModel.pets.forEach { pet ->
-            NameCard(pet)
+            NameCard(pet, navController)
         }
     }
 }
 
-@Preview
 @Composable
-fun NameCard(name: String = "Name") {
+fun NameCard(name: String = "Name", navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -113,7 +113,7 @@ fun NameCard(name: String = "Name") {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { }
+                .clickable { navController.navigate(NavScreen.FamilyMember.route) }
         ) {
             Icon(Icons.Outlined.Person, null, Modifier.padding(8.dp))
             Text(
