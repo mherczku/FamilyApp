@@ -29,6 +29,12 @@
 
 ### Ötödik hét:
 
+- [x] API függvények elkészítése
+- [x] Room adatmodellek elkészítése
+- [x] Room Dao függvények implementálása
+- [x] UI készítése FamilyMemberSettings
+- [ ] Remote adatmodellek végleges egyeztetése
+
 ### Hatodik hét:
 
 ### Hetedik hét:
