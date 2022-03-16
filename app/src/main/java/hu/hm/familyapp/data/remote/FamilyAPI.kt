@@ -5,7 +5,6 @@ import hu.hm.familyapp.data.model.*
 import hu.hm.familyapp.data.remote.models.RemoteUser
 import retrofit2.http.*
 
-
 interface FamilyAPI {
 
     companion object {
@@ -154,5 +153,4 @@ interface FamilyAPI {
         @Path("id") listID: String,
         @Path("itemID") itemID: String
     )
-
 }

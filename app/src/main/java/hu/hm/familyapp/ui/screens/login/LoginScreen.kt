@@ -130,7 +130,7 @@ fun LoginScreen(
                 .padding(horizontal = 20.dp),
             shape = MaterialTheme.shapes.medium
         ) {
-            if(loading.value) HorizontalDottedProgressBar()
+            if (loading.value) HorizontalDottedProgressBar()
             else Text(text = "Sign In")
         }
         Spacer(modifier = Modifier.padding(5.dp))
@@ -153,7 +153,7 @@ fun LoginScreen(
             )
         }
         OutlinedButton(
-            onClick = { }, 
+            onClick = { },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp),
@@ -200,9 +200,8 @@ fun LoginScreen(
             text = annotatedString.toAnnotatedString(),
             modifier = Modifier
                 .padding(vertical = 16.dp)
-                .align(Alignment.CenterHorizontally) ,
+                .align(Alignment.CenterHorizontally),
             onClick = { navController.navigate(NavScreen.Register.route) }
         )
     }
-
 }

@@ -9,14 +9,12 @@ import androidx.navigation.compose.rememberNavController
 import hu.hm.familyapp.ui.screens.login.LoginScreen
 import hu.hm.familyapp.ui.screens.register.RegisterScreen
 import hu.hm.familyapp.ui.screens.settings.FamilyScreen
-import hu.hm.familyapp.ui.screens.settings.ProfileScreen
 import hu.hm.familyapp.ui.theme.FamilyAppTheme
 
 @Composable
 fun ActivityScreen() {
     val navController = rememberNavController()
-    Scaffold()
-    {
+    Scaffold() {
         NavHost(navController = navController, startDestination = NavScreen.Login.route) {
 
             composable(NavScreen.Login.route) {
@@ -39,7 +37,6 @@ sealed class NavScreen(val route: String) {
     object Login : NavScreen("Login")
     object Register : NavScreen("Register")
     object Home : NavScreen("Home")
-
 }
 
 @Preview(showBackground = true)

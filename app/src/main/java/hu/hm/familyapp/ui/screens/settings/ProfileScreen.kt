@@ -1,6 +1,5 @@
 package hu.hm.familyapp.ui.screens.settings
 
-import android.telephony.PhoneNumberUtils
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -32,7 +31,6 @@ import com.skydoves.landscapist.ShimmerParams
 import com.skydoves.landscapist.coil.CoilImage
 import hu.hm.familyapp.R
 import java.util.*
-import java.util.Calendar.getInstance
 
 @Preview
 @Composable
@@ -60,9 +58,8 @@ fun ProfileScreen(
                 onClick = { /*TODO viewModel.save()*/ },
                 shape = MaterialTheme.shapes.medium,
 
-                ) {
+            ) {
                 if (viewModel.loading.value) {
-
                 }
                 Text("Save")
             }

@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -115,7 +114,7 @@ fun NameCard(name: String = "Name") {
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { }
-        ){
+        ) {
             Icon(Icons.Outlined.Person, null, Modifier.padding(8.dp))
             Text(
                 modifier = Modifier
@@ -132,11 +131,10 @@ fun NameCard(name: String = "Name") {
                     .fillMaxWidth()
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.End
-            ){
+            ) {
                 Icon(Icons.Default.ArrowForward, null)
             }
         }
-
     }
 }
 
@@ -152,7 +150,7 @@ fun NoFamily(viewModel: FamilyViewModel) {
         Box(
             modifier = Modifier.height(300.dp)
         ) {
-            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_family))
+            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_family)) // ktlint-disable max-line-length
             LottieAnimation(composition, iterations = LottieConstants.IterateForever)
         }
 
@@ -194,6 +192,5 @@ fun NoFamily(viewModel: FamilyViewModel) {
                 text = stringResource(R.string.join_family)
             )
         }
-
     }
 }

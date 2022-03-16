@@ -4,11 +4,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -19,9 +19,11 @@ class NetworkModule {
     fun provideOkHttpClient(): OkHttpClient {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         return OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor.apply {
-                httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-            })
+            .addInterceptor(
+                httpLoggingInterceptor.apply {
+                    httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+                }
+            )
             .build()
     }
 
@@ -36,5 +38,4 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideFamilyAPI(retrofit: Retrofit): FamilyAPI = retrofit.create(FamilyAPI::class.java)
-
 }

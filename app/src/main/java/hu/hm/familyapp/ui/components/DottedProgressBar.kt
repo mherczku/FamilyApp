@@ -1,6 +1,6 @@
 package hu.hm.familyapp.ui.components
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.* // ktlint-disable no-wildcard-imports
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
@@ -11,7 +11,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
-
 
 @Composable
 fun HorizontalDottedProgressBar() {
@@ -32,7 +31,6 @@ fun HorizontalDottedProgressBar() {
     DrawCanvas(state = state, color = color)
 }
 
-
 @Composable
 fun DrawCanvas(
     state: Float,
@@ -41,7 +39,7 @@ fun DrawCanvas(
     Canvas(
         modifier = Modifier
             .fillMaxWidth()
-            //.height(60.dp),
+        // .height(60.dp),
     ) {
 
         val radius = (4.dp).value
@@ -70,7 +68,3 @@ fun DrawCanvas(
         }
     }
 }
-
-
-
-

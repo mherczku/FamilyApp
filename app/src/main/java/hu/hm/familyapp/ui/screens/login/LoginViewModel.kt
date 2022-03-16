@@ -4,10 +4,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-
 
 @HiltViewModel
 class LoginViewModel @Inject constructor() : ViewModel() {
@@ -17,7 +16,7 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     val passwordVisibility = mutableStateOf(false)
     val loadingButton = mutableStateOf(false)
 
-    fun login( success: () -> Unit ) {
+    fun login(success: () -> Unit) {
         viewModelScope.launch {
             loadingButton.value = true
             delay(1000)
@@ -25,5 +24,4 @@ class LoginViewModel @Inject constructor() : ViewModel() {
             success()
         }
     }
-
 }

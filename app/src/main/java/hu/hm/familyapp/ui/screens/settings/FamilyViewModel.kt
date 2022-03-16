@@ -13,12 +13,10 @@ class FamilyViewModel @Inject constructor() : ViewModel() {
     val children = mutableListOf("Child1", "Child2")
     val pets = mutableListOf("Pet1", "Pet2")
 
-    fun createFamily(){
-
+    fun createFamily() {
     }
 
-    fun joinFamily(){
+    fun joinFamily() {
         hasFamily.value = true
     }
-
 }

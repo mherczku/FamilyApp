@@ -52,7 +52,7 @@ fun RegisterScreen(
     ) {
         Box(
             modifier = Modifier.height(300.dp)
-        ){
+        ) {
             val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_register))
             LottieAnimation(composition, iterations = LottieConstants.IterateForever)
         }
@@ -149,7 +149,7 @@ fun RegisterScreen(
                 .padding(horizontal = 20.dp, vertical = 16.dp),
             shape = MaterialTheme.shapes.medium
         ) {
-            if(loading.value) HorizontalDottedProgressBar()
+            if (loading.value) HorizontalDottedProgressBar()
             else Text(text = "Sign Up")
         }
 
@@ -168,7 +168,5 @@ fun RegisterScreen(
                 .align(Alignment.CenterHorizontally),
             onClick = { navController.popBackStack() }
         )
-
     }
-
 }
