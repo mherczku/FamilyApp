@@ -3,7 +3,7 @@ package hu.hm.familyapp.data.local.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "shoppingLists")
+@Entity(tableName = "lists")
 data class RoomShoppingList(
     @PrimaryKey
     val id: String,
