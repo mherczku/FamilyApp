@@ -125,5 +125,15 @@ fun FamilyMemberScreen(
                 }
             }
         }
+        Spacer(Modifier.padding(16.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            OutlinedButton(
+                onClick = {},
+                shape = MaterialTheme.shapes.medium
+            ) {
+                // Icon(SaveIcon) TODO saveIcon
+                Text(text = "Save")
+            }
+        }
     }
 }

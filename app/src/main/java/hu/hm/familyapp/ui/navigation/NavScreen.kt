@@ -10,6 +10,8 @@ import hu.hm.familyapp.ui.screens.login.LoginScreen
 import hu.hm.familyapp.ui.screens.register.RegisterScreen
 import hu.hm.familyapp.ui.screens.settings.FamilyMemberScreen
 import hu.hm.familyapp.ui.screens.settings.FamilyScreen
+import hu.hm.familyapp.ui.screens.shoppingList.ShoppingListScreen
+import hu.hm.familyapp.ui.screens.shoppingLists.ShoppingListsScreen
 import hu.hm.familyapp.ui.theme.FamilyAppTheme
 
 @Composable
@@ -27,6 +29,14 @@ fun ActivityScreen() {
             }
 
             composable(NavScreen.Home.route) {
+                ShoppingListsScreen(navController)
+            }
+
+            composable(NavScreen.ShoppingList.route) {
+                ShoppingListScreen(navController)
+            }
+
+            composable(NavScreen.Family.route) {
                 FamilyScreen(navController)
             }
 
@@ -43,6 +53,9 @@ sealed class NavScreen(val route: String) {
     object Register : NavScreen("Register")
     object Home : NavScreen("Home")
     object FamilyMember : NavScreen("FamilyMember")
+    object Family : NavScreen("Family")
+    // object ShoppingLists : NavScreen("ShoppingLists")
+    object ShoppingList : NavScreen("ShoppingList")
 }
 
 @Preview(showBackground = true)
