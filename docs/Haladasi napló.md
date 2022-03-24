@@ -33,9 +33,14 @@
 - [x] Room adatmodellek elkészítése
 - [x] Room Dao függvények implementálása
 - [x] UI készítése FamilyMemberSettings
-- [ ] Remote adatmodellek végleges egyeztetése
+- [x] Remote adatmodellek végleges egyeztetése
 
 ### Hatodik hét:
+
+- [x] UI készítése ShoppingLists, ShoppingList, AlertDialog
+- [x] ShoppingList hozzáadása
+- [x] Room adatbázis hibák javítása, ListConverter
+- [x] Navigáció frissítése
 
 ### Hetedik hét:
 
