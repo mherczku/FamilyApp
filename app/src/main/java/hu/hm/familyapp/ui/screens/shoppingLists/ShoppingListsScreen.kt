@@ -237,34 +237,3 @@ private fun ShoppingListsTopBar(
     }
 }
 
-/*
-SwipeToDismiss(
-state = dismissState,
-modifier = Modifier
-.padding(vertical = Dp(1f)),
-directions = setOf(
-DismissDirection.EndToStart
-),
-dismissThresholds = { direction ->
-    FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.1f else 0.05f)
-},
-background = ,
-dismissContent = {
-
-    Card(
-        elevation = animateDpAsState(
-            if (dismissState.dismissDirection != null) 4.dp else 0.dp
-        ).value,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(Dp(50f))
-            .align(alignment = Alignment.CenterVertically)
-    ) {
-        setUpRow(item = item)
-    }
-}
-)
-
-Divider(Modifier.fillMaxWidth(), Color.DarkGray)
-}
-*/
