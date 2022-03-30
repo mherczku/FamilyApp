@@ -19,7 +19,7 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     fun login(success: () -> Unit) {
         viewModelScope.launch {
             loadingButton.value = true
-            delay(1000)
+            delay(200)
             loadingButton.value = false
             success()
         }

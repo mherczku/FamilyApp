@@ -6,22 +6,25 @@ import hu.hm.familyapp.data.local.model.RoomShoppingList
 import hu.hm.familyapp.data.model.ShoppingList
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Singleton
 class Repository @Inject constructor(private val familyDao: FamilyDao) {
 
-    fun getShoppingLists(): List<ShoppingList> {
-
-        return familyDao.getAllShoppingLists().map {
+    suspend fun getShoppingLists(): List<ShoppingList> = withContext(Dispatchers.IO) {
+        val list = familyDao.getAllShoppingLists().map {
             convertToShoppingList(it)
         }
+        println("Size = " + list.size)
+        return@withContext list
     }
 
-    fun addShoppingList(shoppingList: RoomShoppingList) {
+    suspend fun addShoppingList(shoppingList: RoomShoppingList) = withContext(Dispatchers.IO) {
         familyDao.insertShoppingList(shoppingList)
     }
 
-    fun removeShoppingList(listID: String) {
+    suspend fun removeShoppingList(listID: String) = withContext(Dispatchers.IO) {
         familyDao.removeShoppingList(listID)
     }
 }

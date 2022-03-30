@@ -1,5 +1,9 @@
 package hu.hm.familyapp.ui.screens.shoppingLists
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
@@ -10,9 +14,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -23,9 +32,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import hu.hm.familyapp.data.model.ShoppingList
 import hu.hm.familyapp.ui.navigation.NavScreen
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun ShoppingListsScreen(
@@ -36,15 +45,14 @@ fun ShoppingListsScreen(
         topBar = { ShoppingListsTopBar(navController) }
     ) {
         ConstraintLayout(
-            // horizontalAlignment = Alignment.CenterHorizontally,
-            // verticalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxSize()
-            // .scrollable(rememberScrollState(), Orientation.Vertical)
         ) {
             val (list, fab) = createRefs()
             LazyColumn(
-                Modifier.scrollable(rememberScrollState(), Orientation.Vertical).fillMaxSize()
+                Modifier
+                    .scrollable(rememberScrollState(), Orientation.Vertical)
+                    .fillMaxSize()
                     .constrainAs(list) {
                         top.linkTo(parent.top)
                         bottom.linkTo(parent.bottom)
@@ -52,8 +60,75 @@ fun ShoppingListsScreen(
                         start.linkTo(parent.start)
                     }
             ) {
-                items(viewModel.shoppingLists) { list ->
-                    shoppingList(list, navController)
+                items(viewModel.shoppingLists) { shoppingList ->
+                    key(shoppingList.id) {
+                        val dismissState = rememberDismissState()
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp, vertical = 8.dp)
+                                .clickable { navController.navigate(NavScreen.ShoppingList.route) }
+                        ) {
+
+                            if (dismissState.isDismissed(DismissDirection.EndToStart)) {
+                                viewModel.removeList(shoppingList)
+                            }
+                            SwipeToDismiss(
+                                dismissThresholds = { FractionalThreshold(0.2f) },
+                                state = dismissState,
+                                background = {
+                                    val color by animateColorAsState(
+                                        when (dismissState.targetValue) {
+                                            DismissValue.Default -> Color.White
+                                            else -> Color.Red
+                                        }
+                                    )
+                                    val alignment = Alignment.CenterEnd
+                                    val icon = Icons.Default.Delete
+
+                                    val scale by animateFloatAsState(
+                                        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+                                    )
+
+                                    Box(
+                                        Modifier
+                                            .fillMaxSize()
+                                            .background(color)
+                                            .padding(horizontal = 20.dp),
+                                        contentAlignment = alignment
+                                    ) {
+                                        Icon(
+                                            icon,
+                                            contentDescription = "Delete Icon",
+                                            modifier = Modifier.scale(scale)
+                                        )
+                                    }
+                                },
+                                directions = setOf(
+                                    DismissDirection.EndToStart
+                                ),
+                                dismissContent = {
+
+                                    Card(
+                                        elevation = animateDpAsState(
+                                            if (dismissState.dismissDirection != null) 4.dp else 0.dp
+                                        ).value,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(50.dp)
+                                            .align(alignment = Alignment.CenterVertically)
+                                    ) {
+                                        Text(
+                                            shoppingList.name, fontSize = 20.sp,
+                                            modifier = Modifier
+                                                .align(Alignment.CenterVertically)
+                                                .fillMaxHeight()
+                                        )
+                                    }
+                                }
+                            )
+                        }
+                    }
                 }
             }
             FloatingActionButton(
@@ -162,20 +237,34 @@ private fun ShoppingListsTopBar(
     }
 }
 
-@Preview
-@Composable
-fun shoppingList(
-    shoppingList: ShoppingList = ShoppingList(),
-    navController: NavController = rememberNavController()
-) {
+/*
+SwipeToDismiss(
+state = dismissState,
+modifier = Modifier
+.padding(vertical = Dp(1f)),
+directions = setOf(
+DismissDirection.EndToStart
+),
+dismissThresholds = { direction ->
+    FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.1f else 0.05f)
+},
+background = ,
+dismissContent = {
+
     Card(
+        elevation = animateDpAsState(
+            if (dismissState.dismissDirection != null) 4.dp else 0.dp
+        ).value,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 8.dp)
-            .clickable { navController.navigate(NavScreen.ShoppingList.route) }
+            .height(Dp(50f))
+            .align(alignment = Alignment.CenterVertically)
     ) {
-        Row(modifier = Modifier.padding(8.dp)) {
-            Text(shoppingList.name, fontSize = 20.sp)
-        }
+        setUpRow(item = item)
     }
 }
+)
+
+Divider(Modifier.fillMaxWidth(), Color.DarkGray)
+}
+*/
