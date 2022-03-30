@@ -23,7 +23,7 @@ class DiskModule {
 
     @Provides
     @Singleton
-    fun provideNyTimesDatabase(@ApplicationContext context: Context): FamilyDatabase {
+    fun provideFamilyDatabase(@ApplicationContext context: Context): FamilyDatabase {
         return Room.databaseBuilder(context, FamilyDatabase::class.java, DB_NAME).build()
     }
 }

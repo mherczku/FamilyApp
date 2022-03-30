@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import hu.hm.familyapp.data.local.model.RoomShoppingList
-import hu.hm.familyapp.data.model.ShoppingList
 
 @Dao
 abstract class FamilyDao {
@@ -17,13 +16,13 @@ abstract class FamilyDao {
     abstract fun getShoppingListById(listID: String): RoomShoppingList?
 
     @Insert
-    protected abstract fun insertShoppingList(list: RoomShoppingList)
+    abstract fun insertShoppingList(list: RoomShoppingList)
 
     @Insert
     protected abstract fun insertShoppingLists(lists: List<RoomShoppingList>)
 
     @Query("DELETE FROM lists WHERE id = :listID")
-    protected abstract fun removeShoppingList(listID: String)
+    abstract fun removeShoppingList(listID: String)
 
     @Query("DELETE FROM lists")
     protected abstract fun removeAllShoppingLists()
