@@ -44,6 +44,11 @@
 
 ### Hetedik hét:
 
+- [x] UI Navigáció lecserélése BottomNavigationBar-ra
+- [x] Repository összekötése ViewModellel, Adatbázissal (AddList, RemoveList, LoadLists)
+- [x] ShoppingListConverter készítése DB-hez
+- [x] SwipeToDelete implementálása Bevásárló listáknál
+
 ### Nyolcadik hét:
 
 ### Kilencedik hét:
