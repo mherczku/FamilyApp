@@ -61,10 +61,14 @@ fun LoginScreen(
         Spacer(modifier = Modifier.padding(20.dp))
         OutlinedTextField(
             value = emailValue.value,
-            onValueChange = { emailValue.value = it },
+            onValueChange = {
+                emailValue.value = it
+                viewModel.validateEmail()
+            },
             label = { Text(text = "Email Address") },
             placeholder = { Text(text = "Email Address") },
             singleLine = true,
+            isError = viewModel.emailError.value,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp),
@@ -79,7 +83,10 @@ fun LoginScreen(
 
         OutlinedTextField(
             value = passwordValue.value,
-            onValueChange = { passwordValue.value = it },
+            onValueChange = {
+                passwordValue.value = it
+                viewModel.validatePassword()
+            },
             label = { Text("Password") },
             placeholder = { Text(text = "Password") },
             singleLine = true,
@@ -89,6 +96,7 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp),
             shape = MaterialTheme.shapes.medium,
+            isError = viewModel.passwordError.value,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             leadingIcon = {
                 Icon(
