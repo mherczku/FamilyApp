@@ -3,6 +3,7 @@ package hu.hm.familyapp.ui.components
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
@@ -18,7 +19,8 @@ sealed class BottomNavItem(var title: String, var icon: ImageVector, var screen_
 
     object Home : BottomNavItem("Home", Icons.Outlined.Home, NavScreen.Home.route)
     object Family : BottomNavItem("Family", Icons.Outlined.Person, NavScreen.Family.route)
-    object Profile : BottomNavItem("Settings", Icons.Outlined.Settings, NavScreen.Profile.route)
+    object Events : BottomNavItem("Events", Icons.Outlined.Notifications, NavScreen.Events.route)
+    object Settings : BottomNavItem("Settings", Icons.Outlined.Settings, NavScreen.Profile.route)
 }
 
 @Composable
@@ -26,7 +28,8 @@ fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
         BottomNavItem.Home,
         BottomNavItem.Family,
-        BottomNavItem.Profile
+        BottomNavItem.Events,
+        BottomNavItem.Settings
     )
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.background
@@ -48,7 +51,6 @@ fun BottomNavigationBar(navController: NavController) {
                 selected = currentRoute == item.screen_route,
                 onClick = {
                     navController.navigate(item.screen_route) {
-
                         navController.graph.startDestinationRoute?.let { screen_route ->
                             popUpTo(screen_route) {
                                 saveState = true

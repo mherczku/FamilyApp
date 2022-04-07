@@ -2,14 +2,17 @@ package hu.hm.familyapp.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import hu.hm.familyapp.ui.components.BottomNavigationBar
 import hu.hm.familyapp.ui.screens.login.LoginScreen
 import hu.hm.familyapp.ui.screens.register.RegisterScreen
@@ -48,8 +51,11 @@ fun ActivityScreen() {
                 ShoppingListsScreen(navController)
             }
 
-            composable(NavScreen.ShoppingList.route) {
-                ShoppingListScreen(navController)
+            composable(
+                route = "${NavScreen.ShoppingList.route}/{listID}",
+                arguments = listOf(navArgument("listID") { type = NavType.StringType })
+            ) { backStackEntry ->
+                ShoppingListScreen(navController, backStackEntry.arguments?.getString("listID"))
             }
 
             composable(NavScreen.Family.route) {
@@ -63,6 +69,10 @@ fun ActivityScreen() {
             composable(NavScreen.Profile.route) {
                 ProfileScreen(navController)
             }
+
+            composable(NavScreen.Events.route) {
+                Text("Under development")
+            }
         }
     }
 }
@@ -74,7 +84,7 @@ sealed class NavScreen(val route: String) {
     object Home : NavScreen("Home")
     object FamilyMember : NavScreen("FamilyMember")
     object Family : NavScreen("Family")
-    // object ShoppingLists : NavScreen("ShoppingLists")
+    object Events : NavScreen("Events")
     object ShoppingList : NavScreen("ShoppingList")
     object Profile : NavScreen("Profile")
 }

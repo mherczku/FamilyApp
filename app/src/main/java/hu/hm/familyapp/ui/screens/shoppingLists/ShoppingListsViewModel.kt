@@ -1,6 +1,7 @@
 package hu.hm.familyapp.ui.screens.shoppingLists
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +18,9 @@ class ShoppingListsViewModel @Inject constructor(private val repository: Reposit
     val newName = mutableStateOf("")
     val dialogShown = mutableStateOf(false)
     val shoppingLists = mutableListOf<ShoppingList>()
+    val items: MutableLiveData<List<ShoppingList>> by lazy {
+        MutableLiveData()
+    }
 
     init {
         loadLists()
@@ -26,6 +30,7 @@ class ShoppingListsViewModel @Inject constructor(private val repository: Reposit
         viewModelScope.launch {
             shoppingLists.clear()
             val list = repository.getShoppingLists()
+            items.postValue(list)
             shoppingLists.addAll(list)
         }
     }

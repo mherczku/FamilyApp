@@ -6,12 +6,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.Card
-import androidx.compose.material.Checkbox
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.key
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,13 +23,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import hu.hm.familyapp.data.model.ShoppingListItem
+import timber.log.Timber
 
-@Preview
 @Composable
 fun ShoppingListScreen(
     navController: NavController = rememberNavController(),
+    listID: String?,
     viewModel: ShoppingListViewModel = hiltViewModel()
 ) {
+    val list = viewModel.shoppingItems.observeAsState(initial = listOf())
+    LaunchedEffect(key1 = 1) {
+        if (listID != null)
+            viewModel.loadLists(listID)
+        else Timber.d("ERROR: ListID was empty")
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -35,9 +46,67 @@ fun ShoppingListScreen(
             .scrollable(rememberScrollState(), Orientation.Vertical)
     ) {
         LazyColumn() {
-            items(viewModel.shoppingItems) { item ->
-                shoppingItem(item)
+            items(list.value) { item ->
+                key(item.id) {
+                    shoppingItem(item)
+                }
             }
+        }
+        FloatingActionButton(
+            onClick = { viewModel.dialogShown.value = true }
+        ) {
+            Icon(Icons.Default.Add, null)
+        }
+        if (viewModel.dialogShown.value) {
+            AlertDialog(
+                onDismissRequest = { viewModel.dialogShown.value = false },
+                title = {
+                    Text(
+                        "Add new shopping list",
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                text = {
+                    Spacer(Modifier.padding(vertical = 16.dp))
+                    OutlinedTextField(
+                        value = viewModel.newName.value,
+                        onValueChange = { viewModel.newName.value = it },
+                        label = { Text(text = "New Item") },
+                        placeholder = { Text(text = "New Item Name") },
+                        singleLine = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
+                        shape = MaterialTheme.shapes.medium
+                    )
+                },
+                buttons = {
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        Button(
+                            shape = MaterialTheme.shapes.medium,
+                            onClick = { viewModel.dialogShown.value = false }
+                        ) {
+                            Text("Cancel")
+                        }
+
+                        Button(
+                            shape = MaterialTheme.shapes.medium,
+                            onClick = {
+                                viewModel.addNewItem()
+                                viewModel.dialogShown.value = false
+                            }
+                        ) {
+                            Text("Add")
+                        }
+                    }
+                }
+            )
         }
     }
 }

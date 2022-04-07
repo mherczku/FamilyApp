@@ -8,5 +8,5 @@ data class RoomShoppingList(
     @PrimaryKey
     val id: String,
     val name: String,
-    val items: List<RoomShoppingListItem>
+    var items: List<RoomShoppingListItem>
 )

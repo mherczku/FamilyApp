@@ -8,5 +8,5 @@ data class RoomShoppingListItem(
     @PrimaryKey
     val id: String,
     val name: String,
-    val done: String
+    val done: Boolean
 )
