@@ -49,9 +49,18 @@
 - [x] ShoppingListConverter készítése DB-hez
 - [x] SwipeToDelete implementálása Bevásárló listáknál
 
-### Nyolcadik hét:
+### Nyolcadik hét: 
+
+​	(ZHs hét, hibajavítások, kevesebb haladás)
+
+- [x] Navigációs hiba javitása
+- [x] ShoppingLists -> ShoppingListItems navigációs listId argument fix
+- [x] Repository összekötése ViewModellel, Adatbázissal (Load ShoppingItems, Add ShoppingItems)
+- [x] Események Tab hozzáadása a BottomBarNavigációhoz (Képernyő "under development")
 
 ### Kilencedik hét:
+
+- [ ] Összekötés Backenddel
 
 ### Tizedik hét:
 
