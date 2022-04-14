@@ -15,7 +15,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -35,7 +34,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import hu.hm.familyapp.data.model.ShoppingList
 import hu.hm.familyapp.ui.navigation.NavScreen
-import hu.hm.familyapp.ui.screens.shoppingList.ShoppingListViewModel
 
 @Composable
 fun ShoppingListsScreen(
@@ -133,7 +131,6 @@ fun ShoppingListsScreen(
 }
 
 @OptIn(ExperimentalMaterialApi::class)
-@Preview
 @Composable
 private fun ShoppingList(
     navController: NavController = rememberNavController(),
@@ -186,26 +183,29 @@ private fun ShoppingList(
                 DismissDirection.EndToStart
             ),
             dismissContent = {
-
-                Card(
-                    elevation = animateDpAsState(
-                        if (dismissState.dismissDirection != null) 4.dp else 0.dp
-                    ).value,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                        .align(alignment = Alignment.CenterVertically)
-                ) {
-                    Text(
-                        shoppingList.name, fontSize = 20.sp,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .height(50.dp)
-                            .align(Alignment.CenterVertically),
-                        textAlign = TextAlign.Justify
-                    )
-                }
+                Inside(shoppingList, dismissState.dismissDirection)
             }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun Inside(
+    shoppingList: ShoppingList = ShoppingList(),
+    direction: DismissDirection? = DismissDirection.EndToStart
+) {
+    Card(
+        elevation = animateDpAsState(
+            if (direction != null) 4.dp else 0.dp
+        ).value,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = 24.dp)
+    ) {
+        Text(
+            text = shoppingList.name,
+            fontSize = 20.sp,
         )
     }
 }

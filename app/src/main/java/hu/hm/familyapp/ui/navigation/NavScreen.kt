@@ -54,6 +54,7 @@ fun ActivityScreen() {
             composable(
                 route = "${NavScreen.ShoppingList.route}/{listID}",
                 arguments = listOf(navArgument("listID") { type = NavType.StringType })
+
             ) { backStackEntry ->
                 ShoppingListScreen(navController, backStackEntry.arguments?.getString("listID"))
             }
