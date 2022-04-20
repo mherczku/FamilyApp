@@ -1,5 +1,7 @@
 package hu.hm.familyapp.ui.screens.shoppingList
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
@@ -16,7 +18,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -48,7 +49,7 @@ fun ShoppingListScreen(
         LazyColumn() {
             items(list.value) { item ->
                 key(item.id) {
-                    shoppingItem(item)
+                    shoppingItem(item, viewModel)
                 }
             }
         }
@@ -111,9 +112,11 @@ fun ShoppingListScreen(
     }
 }
 
-@Preview
 @Composable
-fun shoppingItem(shoppingListItem: ShoppingListItem = ShoppingListItem()) {
+fun shoppingItem(
+    shoppingListItem: ShoppingListItem = ShoppingListItem(),
+    viewModel: ShoppingListViewModel
+) {
 
     Card(
         modifier = Modifier
@@ -124,7 +127,7 @@ fun shoppingItem(shoppingListItem: ShoppingListItem = ShoppingListItem()) {
             Modifier.padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Checkbox(checked = shoppingListItem.done, onCheckedChange = { shoppingListItem.done = it })
+            Checkbox(checked = shoppingListItem.done, onCheckedChange = { viewModel.checkItem(shoppingListItem) })
             Spacer(Modifier.padding(horizontal = 8.dp))
             Text(shoppingListItem.name, fontSize = 20.sp)
         }

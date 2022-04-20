@@ -1,8 +1,10 @@
 package hu.hm.familyapp.data.model
 
+import hu.hm.familyapp.data.local.model.RoomShoppingListItem
+
 data class ShoppingList(
     val id: String = "",
     val name: String = "TestList1",
 
-    var itemsID: List<String> = listOf("item1", "item2")
+    var items: List<RoomShoppingListItem> = mutableListOf()
 )

@@ -1,28 +1,41 @@
 package hu.hm.familyapp.repository
 
-import hu.hm.familyapp.data.convertToShoppingList
+import android.os.Build
+import androidx.annotation.RequiresApi
 import hu.hm.familyapp.data.local.FamilyDao
+import hu.hm.familyapp.data.local.convertToShoppingList
 import hu.hm.familyapp.data.local.model.RoomShoppingList
 import hu.hm.familyapp.data.local.model.RoomShoppingListItem
 import hu.hm.familyapp.data.model.ShoppingList
+import hu.hm.familyapp.data.remote.FamilyAPI
+import hu.hm.familyapp.data.remote.convertToRemoteCreateShoppingList
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 @Singleton
-class Repository @Inject constructor(private val familyDao: FamilyDao) {
+class Repository @Inject constructor(
+    private val familyDao: FamilyDao,
+    private val familyAPI: FamilyAPI
+) {
 
     suspend fun getShoppingLists(): List<ShoppingList> = withContext(Dispatchers.IO) {
         val list = familyDao.getAllShoppingLists().map {
             convertToShoppingList(it)
         }
-        println("Size = " + list.size)
         return@withContext list
     }
 
     suspend fun addShoppingList(shoppingList: RoomShoppingList) = withContext(Dispatchers.IO) {
         familyDao.insertShoppingList(shoppingList)
+        Timber.wtf("ad")
+        familyAPI.createShoppingList(
+            shoppingList.convertToRemoteCreateShoppingList(
+                null
+            )
+        )
     }
 
     suspend fun removeShoppingList(listID: String) = withContext(Dispatchers.IO) {
@@ -37,6 +50,16 @@ class Repository @Inject constructor(private val familyDao: FamilyDao) {
     suspend fun addShoppingItem(theListID: String, roomShoppingListItem: RoomShoppingListItem) = withContext(Dispatchers.IO) {
         val list = familyDao.getShoppingListById(theListID)
         val items = list?.items?.toMutableList() ?: return@withContext
+        items.add(roomShoppingListItem)
+        list.items = items
+        familyDao.setShoppingList(list)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    suspend fun checkShoppingItem(theListID: String, roomShoppingListItem: RoomShoppingListItem) = withContext(Dispatchers.IO) {
+        val list = familyDao.getShoppingListById(theListID)
+        val items = list?.items?.toMutableList() ?: return@withContext
+        items.removeIf { it.id == roomShoppingListItem.id }
         items.add(roomShoppingListItem)
         list.items = items
         familyDao.setShoppingList(list)

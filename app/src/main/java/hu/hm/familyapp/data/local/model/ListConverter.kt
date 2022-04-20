@@ -2,7 +2,6 @@ package hu.hm.familyapp.data.local.model
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import hu.hm.familyapp.data.model.ShoppingListItem
 
 class ListConverter {
 

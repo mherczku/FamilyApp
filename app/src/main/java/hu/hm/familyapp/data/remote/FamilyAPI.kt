@@ -1,14 +1,16 @@
 package hu.hm.familyapp.data.remote
 
-import hu.hm.familyapp.BuildConfig
 import hu.hm.familyapp.data.model.*
+import hu.hm.familyapp.data.remote.models.RemoteCreateShoppingList
+import hu.hm.familyapp.data.remote.models.RemoteGetShoppingList
+import hu.hm.familyapp.data.remote.models.RemoteShoppingList
 import hu.hm.familyapp.data.remote.models.RemoteUser
 import retrofit2.http.*
 
 interface FamilyAPI {
 
     companion object {
-        const val url = BuildConfig.API_BASE_URL
+        const val url = "api"
     }
 
     // Auth
@@ -74,40 +76,39 @@ interface FamilyAPI {
 
     // ShoppingList
     @GET("$url/shoppinglist/{id}")
-    suspend fun getShoppingList(@Path("id") listID: String): ShoppingList
+    suspend fun getShoppingList(@Path("id") listID: Int): RemoteGetShoppingList
 
     @PUT("$url/shoppinglist/{id}")
     suspend fun editShoppingList(
-        @Path("id") listID: String,
-        @Body list: ShoppingList
+        @Path("id") listID: Int,
+        @Body list: RemoteShoppingList
     )
 
     @DELETE("$url/shoppinglist/{id}")
     suspend fun deleteShoppingList(
-        @Path("id") listID: String,
+        @Path("id") listID: Int,
     )
 
-    @POST("$url/shoppinglist/create/{id}")
+    @POST("$url/shoppinglist/create")
     suspend fun createShoppingList(
-        @Path("id") userID: String,
-        @Body list: ShoppingList
+        @Body list: RemoteCreateShoppingList
     )
 
     @GET("$url/shoppinglist/byfamily/{id}")
     suspend fun getShoppingListsByFamily(
-        @Path("id") familyID: String
-    ): List<ShoppingList>
+        @Path("id") familyID: Int
+    ): List<Int>
 
     @PUT("$url/shoppinglist/{id}/adduser")
     suspend fun addFamilyMemberToList(
-        @Path("id") listID: String,
-        @Body userID: String
+        @Path("id") listID: Int,
+        @Body userID: Int
     )
 
     @PUT("$url/shoppinglist/{id}/removeuser")
     suspend fun removeFamilyMemberFromList(
-        @Path("id") listID: String,
-        @Body userID: String
+        @Path("id") listID: Int,
+        @Body userID: Int
     )
 
     // ShoppingListItem
@@ -115,7 +116,7 @@ interface FamilyAPI {
     suspend fun getShoppingListItem(
         @Path("listID") listID: String,
         @Path("itemID") itemID: String
-    ): ShoppingListItem
+    )
 
     @PUT("$url/shoppinglist/{listID}/shoppingitem/{itemID}")
     suspend fun editShoppingListItem(

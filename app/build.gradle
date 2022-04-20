@@ -16,7 +16,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        buildConfigField 'String', 'API_BASE_URL', "\"https://.../api\""
+        buildConfigField 'String', 'API_BASE_URL', "\"https://family-app-kotlin-backend.herokuapp.com/\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

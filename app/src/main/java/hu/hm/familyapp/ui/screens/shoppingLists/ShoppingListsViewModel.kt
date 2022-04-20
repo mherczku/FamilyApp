@@ -11,6 +11,7 @@ import hu.hm.familyapp.repository.Repository
 import java.util.*
 import javax.inject.Inject
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @HiltViewModel
 class ShoppingListsViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
@@ -37,7 +38,7 @@ class ShoppingListsViewModel @Inject constructor(private val repository: Reposit
 
     fun addNewList() {
         viewModelScope.launch {
-            repository.addShoppingList(
+            val response = repository.addShoppingList(
                 RoomShoppingList(
                     id = Random().nextInt().toString(),
                     name = newName.value,
