@@ -60,9 +60,14 @@
 
 ### Kilencedik hét:
 
-- [ ] Összekötés Backenddel
+- [x] Kapcsolódás backendhez part 1, hibák javítása, egyeztetések
+- [x] Fix local adatbázis shoppingItem tárolás
 
 ### Tizedik hét:
+
+- [x] Backend Heroku beállítás
+- [x] Kapcsolódás backendhez part 2, hibák javítása, egyeztetések
+- [x] Tesztek írása összes Api kéréshez -> visszajelzés backendnek hibákról
 
 ### Tizenegyedik hét:
 
