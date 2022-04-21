@@ -9,16 +9,19 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Test
+import org.junit.runners.MethodSorters
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class ApiTests {
 
     lateinit var api: FamilyAPI
-    var userID = 1
-    var listID = 1
-    var itemID = 1
+    private var userID = 1
+    private var listID = 1
+    private var itemID = 1
 
     @Before
     fun init() {
@@ -42,15 +45,15 @@ class ApiTests {
     }
 
     @Test
-    fun registerUserTest(): Unit = runBlocking {
+    fun t01registerUserTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            userID = api.register(RemoteCreateUser("password", "email@test3.hu"))
+            userID = api.register(RemoteCreateUser("password", "email@test4.hu"))
         }
     }
 
     @Test
-    fun loginUserTest(): Unit = runBlocking {
+    fun t02loginUserTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.login(RemoteCreateUser("password", "email@test2.hu"))
@@ -58,7 +61,7 @@ class ApiTests {
     }
 
     @Test
-    fun createFamilyTest(): Unit = runBlocking {
+    fun t03createFamilyTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.createFamily(RemoteFamily(1))
@@ -66,7 +69,7 @@ class ApiTests {
     }
 
     @Test
-    fun editFamilyTest(): Unit = runBlocking {
+    fun t04editFamilyTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.editFamily(1, RemoteFamily(1))
@@ -74,7 +77,7 @@ class ApiTests {
     }
 
     @Test
-    fun getFamilyTest(): Unit = runBlocking {
+    fun t05getFamilyTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             val f = api.getFamily(1)
@@ -84,7 +87,7 @@ class ApiTests {
     }
 
     @Test
-    fun addUserToFamilyTest(): Unit = runBlocking {
+    fun t06addUserToFamilyTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.addFamilyMember(1, userID)
@@ -92,7 +95,7 @@ class ApiTests {
     }
 
     @Test
-    fun removeUserFromFamilyTest(): Unit = runBlocking {
+    fun t07removeUserFromFamilyTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.removeFamilyMember(1, userID)
@@ -100,7 +103,7 @@ class ApiTests {
     }
 
     @Test
-    fun deleteFamilyTest(): Unit = runBlocking {
+    fun t08deleteFamilyTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.deleteFamily(1)
@@ -108,7 +111,7 @@ class ApiTests {
     }
 
     @Test
-    fun createShoppingListTest(): Unit = runBlocking {
+    fun t09createShoppingListTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             listID = api.createShoppingList(RemoteCreateShoppingList(null, "testList"))
@@ -116,7 +119,7 @@ class ApiTests {
     }
 
     @Test
-    fun editShoppingListTest(): Unit = runBlocking {
+    fun t10editShoppingListTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.editShoppingList(listID, RemoteShoppingList(listID, "Lidl", null))
@@ -124,7 +127,7 @@ class ApiTests {
     }
 
     @Test
-    fun getShoppingListTest(): Unit = runBlocking {
+    fun t11getShoppingListTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             val l = api.getShoppingList(listID)
@@ -134,7 +137,7 @@ class ApiTests {
     }
 
     @Test
-    fun addUserToShoppingListTest(): Unit = runBlocking {
+    fun t12addUserToShoppingListTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.addFamilyMemberToList(listID, userID)
@@ -142,7 +145,7 @@ class ApiTests {
     }
 
     @Test
-    fun removeUserToShoppingListTest(): Unit = runBlocking {
+    fun t13removeUserToShoppingListTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.removeFamilyMemberFromList(listID, userID)
@@ -150,7 +153,7 @@ class ApiTests {
     }
 
     @Test
-    fun getFamilyShoppingListsTest(): Unit = runBlocking {
+    fun t14getFamilyShoppingListsTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.getShoppingListsByFamily(familyID = 2)
@@ -158,14 +161,14 @@ class ApiTests {
     }
 
     @Test
-    fun addShoppingItemTest(): Unit = runBlocking {
+    fun t15addShoppingItemTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             itemID = api.addShoppingListItem(listID, RemoteCreateShoppingItem("Sajt", false))
         }
     }
     @Test
-    fun doneShoppingItemTest(): Unit = runBlocking {
+    fun t16doneShoppingItemTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.markDoneShoppingListItem(listID, itemID)
@@ -173,7 +176,7 @@ class ApiTests {
     }
 
     @Test
-    fun undoneShoppingItemTest(): Unit = runBlocking {
+    fun t17undoneShoppingItemTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.markUndoneShoppingListItem(listID, itemID)
@@ -181,7 +184,7 @@ class ApiTests {
     }
 
     @Test
-    fun editShoppingItemTest(): Unit = runBlocking {
+    fun t18editShoppingItemTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.editShoppingListItem(listID, itemID, RemoteShoppingItem(itemID, "Alma", false, null))
@@ -189,7 +192,7 @@ class ApiTests {
     }
 
     @Test
-    fun getAllShoppingItemTest(): Unit = runBlocking {
+    fun t19getAllShoppingItemTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             val ids = api.getShoppingListItemsFromList(listID)
@@ -197,7 +200,7 @@ class ApiTests {
     }
 
     @Test
-    fun getShoppingItemTest(): Unit = runBlocking {
+    fun t20getShoppingItemTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             val i = api.getShoppingListItem(listID, itemID)
@@ -207,7 +210,7 @@ class ApiTests {
     }
 
     @Test
-    fun deleteShoppingItemTest(): Unit = runBlocking {
+    fun t21deleteShoppingItemTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.deleteShoppingListItem(listID, itemID)
@@ -215,7 +218,7 @@ class ApiTests {
     }
 
     @Test
-    fun deleteShoppingListTest(): Unit = runBlocking {
+    fun t22eleteShoppingListTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.deleteShoppingList(listID)
@@ -223,7 +226,7 @@ class ApiTests {
     }
 
     @Test
-    fun editUserTest(): Unit = runBlocking {
+    fun t23editUserTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.editUser(userID, RemoteUser("newtest@email.hu", "password"))
@@ -231,7 +234,7 @@ class ApiTests {
     }
 
     @Test
-    fun getUserTest(): Unit = runBlocking {
+    fun t24getUserTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             val u = api.getUser(userID)
@@ -241,21 +244,22 @@ class ApiTests {
     }
 
     @Test
-    fun inviteUserTest(): Unit = runBlocking {
+    fun t25inviteUserTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.inviteUser(userID, RemoteCreateInvite("newtest@email.hu", 1))
         }
     }
     @Test
-    fun getUserInvitesTest(): Unit = runBlocking {
+    fun t26getUserInvitesTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             val invs = api.getUserInvites(userID)
         }
     }
 
-    fun deleteUserTest(): Unit = runBlocking {
+    @Test
+    fun t27deleteUserTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.deleteUser(userID)
