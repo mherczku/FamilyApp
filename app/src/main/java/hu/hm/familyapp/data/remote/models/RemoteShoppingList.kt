@@ -5,7 +5,7 @@ data class RemoteShoppingList(
 
     val name: String,
 
-    val family: RemoteFamily,
+    val family: RemoteFamily?, // TODO backendben nem nullos
 
     var users: List<RemoteUser>? = null,
 

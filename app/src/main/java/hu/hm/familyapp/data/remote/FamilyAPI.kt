@@ -1,10 +1,7 @@
 package hu.hm.familyapp.data.remote
 
 import hu.hm.familyapp.data.model.*
-import hu.hm.familyapp.data.remote.models.RemoteCreateShoppingList
-import hu.hm.familyapp.data.remote.models.RemoteGetShoppingList
-import hu.hm.familyapp.data.remote.models.RemoteShoppingList
-import hu.hm.familyapp.data.remote.models.RemoteUser
+import hu.hm.familyapp.data.remote.models.*
 import retrofit2.http.*
 
 interface FamilyAPI {
@@ -15,63 +12,69 @@ interface FamilyAPI {
 
     // Auth
     @POST("$url/login")
-    suspend fun login(@Body user: RemoteUser)
+    suspend fun login(@Body user: RemoteCreateUser)
 
     @POST("$url/register")
-    suspend fun register(@Body user: RemoteUser)
+    suspend fun register(@Body user: RemoteCreateUser): Int
 
     // User
     @GET("$url/user/{id}")
-    suspend fun getUser(@Path("id") userID: String): User
+    suspend fun getUser(@Path("id") userID: Int): RemoteGetUser
 
     @PUT("$url/user/{id}")
     suspend fun editUser(
-        @Path("id") userID: String,
-        @Body user: User
+        @Path("id") userID: Int,
+        @Body user: RemoteUser
     )
 
     @DELETE("$url/user/{id}")
     suspend fun deleteUser(
-        @Path("id") userID: String,
+        @Path("id") userID: Int,
     )
 
     @PUT("$url/user/{id}/sendinvite")
     suspend fun inviteUser(
-        @Path("id") userID: String,
-        @Body invite: Invite
+        @Path("id") userID: Int,
+        @Body invite: RemoteCreateInvite
     )
+
+    // TODO ilyen fgv nincs
+    @PUT("$url/user/{id}/invites")
+    suspend fun getUserInvites(
+        @Path("id") userID: Int
+    ): List<Int>?
 
     // Family
     @GET("$url/family/{id}")
-    suspend fun getFamily(@Path("id") familyID: String): Family
+    suspend fun getFamily(@Path("id") familyID: Int): RemoteGetFamily
 
     @PUT("$url/family/{id}")
     suspend fun editFamily(
-        @Path("id") familyID: String,
-        @Body family: Family
+        @Path("id") familyID: Int,
+        @Body family: RemoteFamily
     )
 
     @DELETE("$url/family/{id}")
     suspend fun deleteFamily(
-        @Path("id") familyID: String,
+        @Path("id") familyID: Int,
     )
 
-    @POST("$url/family/create/{id}")
+    @POST("$url/family/create")
     suspend fun createFamily(
-        @Path("id") userID: String,
-        @Body family: Family
+        @Body family: RemoteFamily
+        // TODO backend picture bytearray-t vár --> meeting
     )
 
     @PUT("$url/family/{id}/adduser")
     suspend fun addFamilyMember(
-        @Path("id") familyID: String,
-        @Body userID: String
+        @Path("id") familyID: Int,
+        @Body userID: Int
     )
 
     @PUT("$url/family/{id}/removeuser")
     suspend fun removeFamilyMember(
-        @Path("id") familyID: String,
-        @Body userID: String
+        @Path("id") familyID: Int,
+        @Body userID: Int
     )
 
     // ShoppingList
@@ -92,7 +95,7 @@ interface FamilyAPI {
     @POST("$url/shoppinglist/create")
     suspend fun createShoppingList(
         @Body list: RemoteCreateShoppingList
-    )
+    ): Int
 
     @GET("$url/shoppinglist/byfamily/{id}")
     suspend fun getShoppingListsByFamily(
@@ -114,44 +117,43 @@ interface FamilyAPI {
     // ShoppingListItem
     @GET("$url/shoppinglist/{listID}/shoppingitem/{itemID}")
     suspend fun getShoppingListItem(
-        @Path("listID") listID: String,
-        @Path("itemID") itemID: String
-    )
+        @Path("listID") listID: Int,
+        @Path("itemID") itemID: Int
+    ): RemoteGetShoppingItem
 
     @PUT("$url/shoppinglist/{listID}/shoppingitem/{itemID}")
     suspend fun editShoppingListItem(
-        @Path("id") listID: String,
-        @Path("itemID") itemID: String,
-        @Body item: ShoppingListItem
+        @Path("id") listID: Int,
+        @Path("itemID") itemID: Int,
+        @Body item: RemoteShoppingItem
     )
 
     @DELETE("$url/shoppinglist/{listID}/shoppingitem/{itemID}")
     suspend fun deleteShoppingListItem(
-        @Path("id") listID: String,
-        @Path("itemID") itemID: String
+        @Path("id") listID: Int,
+        @Path("itemID") itemID: Int
     )
 
-    @POST("$url/shoppinglist/{listID}/shoppingitem/{itemID}/add")
+    @POST("$url/shoppinglist/{listID}/shoppingitem/add")
     suspend fun addShoppingListItem(
-        @Path("id") userID: String,
-        @Path("itemID") itemID: String,
-        @Body shoppingItem: ShoppingListItem
-    )
+        @Path("listID") listID: Int,
+        @Body shoppingItem: RemoteCreateShoppingItem
+    ): Int // TODO backend visszaadja e az id-t
 
     @GET("$url/shoppinglist/{listID}/shoppingitem/all")
     suspend fun getShoppingListItemsFromList(
-        @Path("id") listID: String
-    ): List<ShoppingListItem>
+        @Path("id") listID: Int
+    ): List<Int>?
 
     @PUT("$url/shoppinglist/{listID}/shoppingitem/{itemID}/done")
     suspend fun markDoneShoppingListItem(
-        @Path("id") listID: String,
-        @Path("itemID") itemID: String
+        @Path("id") listID: Int,
+        @Path("itemID") itemID: Int
     )
 
     @PUT("$url/shoppinglist/{listID}/shoppingitem/{itemID}/undone")
     suspend fun markUndoneShoppingListItem(
-        @Path("id") listID: String,
-        @Path("itemID") itemID: String
+        @Path("id") listID: Int,
+        @Path("itemID") itemID: Int
     )
 }
