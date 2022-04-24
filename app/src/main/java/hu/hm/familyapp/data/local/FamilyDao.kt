@@ -22,7 +22,7 @@ abstract class FamilyDao {
     protected abstract fun insertShoppingLists(lists: List<RoomShoppingList>)
 
     @Query("DELETE FROM lists WHERE id = :listID")
-    abstract fun removeShoppingList(listID: String)
+    abstract fun removeShoppingList(listID: Int)
 
     @Query("DELETE FROM lists")
     protected abstract fun removeAllShoppingLists()

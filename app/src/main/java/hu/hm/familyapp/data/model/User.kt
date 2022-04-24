@@ -1,7 +1,7 @@
 package hu.hm.familyapp.data.model
 
 data class User(
-    val id: String = "testID",
+    val id: Int = 1,
     val password: String = "testPass",
     val email: String = "test@test.hu",
     val username: String = "TestUser",

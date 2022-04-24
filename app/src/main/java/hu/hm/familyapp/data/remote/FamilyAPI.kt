@@ -102,6 +102,11 @@ interface FamilyAPI {
         @Path("id") familyID: Int
     ): List<Int>
 
+    @GET("$url/shoppinglist/byuser/{id}")
+    suspend fun getShoppingListsByUser(
+        @Path("id") userID: Int
+    ): List<Int> // TODO backend missing
+
     @PUT("$url/shoppinglist/{id}/adduser")
     suspend fun addFamilyMemberToList(
         @Path("id") listID: Int,
@@ -143,7 +148,7 @@ interface FamilyAPI {
     @GET("$url/shoppinglist/{listID}/shoppingitem/all")
     suspend fun getShoppingListItemsFromList(
         @Path("id") listID: Int
-    ): List<Int>?
+    ): List<RemoteGetShoppingItem>? // TODO backend más
 
     @PUT("$url/shoppinglist/{listID}/shoppingitem/{itemID}/done")
     suspend fun markDoneShoppingListItem(

@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "lists")
 data class RoomShoppingList(
     @PrimaryKey
-    val id: String,
+    val id: Int,
     val name: String,
     var items: List<RoomShoppingListItem>
 )

@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class RoomShoppingListItem(
     @PrimaryKey
-    val id: String,
+    val id: Int,
     val name: String,
     var done: Boolean
 )

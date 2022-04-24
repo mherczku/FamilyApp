@@ -42,7 +42,7 @@ class ShoppingListViewModel @Inject constructor(private val repository: Reposito
             repository.addShoppingItem(
                 theListID,
                 RoomShoppingListItem(
-                    id = Random().nextInt().toString(),
+                    id = Random().nextInt(),
                     name = newName.value,
                     done = false
                 )
@@ -56,7 +56,7 @@ class ShoppingListViewModel @Inject constructor(private val repository: Reposito
             shoppingListItem.done = !shoppingListItem.done
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 repository.checkShoppingItem(theListID, convertToRoomShoppingListItem(shoppingListItem))
-            }else Timber.d("")
+            } else Timber.d("")
             loadLists(theListID)
         }
     }
