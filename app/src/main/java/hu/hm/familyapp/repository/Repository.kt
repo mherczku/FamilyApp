@@ -22,7 +22,7 @@ class Repository @Inject constructor(
     private val familyDao: FamilyDao,
     private val familyAPI: FamilyAPI
 ) {
-
+    var cookie: List<String>? = null
     var deviceOnline: Boolean = false
     var user: User = User()
 

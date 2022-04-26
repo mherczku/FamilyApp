@@ -1,6 +1,8 @@
 package hu.hm.familyapp
 
+import hu.hm.familyapp.data.remote.AddCookiesInterceptor
 import hu.hm.familyapp.data.remote.FamilyAPI
+import hu.hm.familyapp.data.remote.ReceivedCookiesInterceptor
 import hu.hm.familyapp.data.remote.models.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,10 +20,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class ApiTests {
 
+    companion object {
+        private var user: RemoteUser = RemoteUser(email = "test@test4.hu", password = "Test1234", id = 13)
+        private var userID = 13
+        private var listID = 21
+        private var itemID = 1
+        private var familyID = 13
+    }
+
     lateinit var api: FamilyAPI
-    private var userID = 1
-    private var listID = 1
-    private var itemID = 1
 
     @Before
     fun init() {
@@ -33,6 +40,8 @@ class ApiTests {
                     httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
                 }
             )
+            .addInterceptor(ReceivedCookiesInterceptor())
+            .addInterceptor(AddCookiesInterceptor())
             .build()
 
         val retrofit = Retrofit.Builder()
@@ -44,19 +53,20 @@ class ApiTests {
         api = retrofit.create(FamilyAPI::class.java)
     }
 
-    @Test
+    /*@Test
     fun t01registerUserTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            userID = api.register(RemoteCreateUser("password", "email@test4.hu"))
+            user = api.register(RemoteCreateUser("password", "email@test11.hu"))
+            userID = user.id
         }
-    }
+    }*/
 
     @Test
     fun t02loginUserTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            api.login(RemoteCreateUser("password", "email@test2.hu"))
+            api.login(RemoteCreateUser(user.password, user.email))
         }
     }
 
@@ -64,15 +74,16 @@ class ApiTests {
     fun t03createFamilyTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            api.createFamily(RemoteFamily(1))
-        }
-    }
+            val a: RemoteFamily = api.createFamily(RemoteFamily(familyID))
+            familyID = a.id
+        } // TODO két fajta idt ad vissza id, ID
+    } // TODO aztán egy idő után infinite lista ez is, valami nagyon fura
 
     @Test
     fun t04editFamilyTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            api.editFamily(1, RemoteFamily(1))
+            api.editFamily(familyID, RemoteFamily(familyID))
         }
     }
 
@@ -80,9 +91,9 @@ class ApiTests {
     fun t05getFamilyTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            val f = api.getFamily(1)
-            val f2 = RemoteFamily(1)
-            assertEquals(f2, f)
+            val f = api.getFamily(familyID)
+            val f2 = RemoteGetFamily(familyID)
+            assertEquals(f2.id, f.id)
         }
     }
 
@@ -90,7 +101,7 @@ class ApiTests {
     fun t06addUserToFamilyTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            api.addFamilyMember(1, userID)
+            api.addFamilyMember(familyID, userID)
         }
     }
 
@@ -98,7 +109,7 @@ class ApiTests {
     fun t07removeUserFromFamilyTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            api.removeFamilyMember(1, userID)
+            api.removeFamilyMember(familyID, userID)
         }
     }
 
@@ -106,7 +117,7 @@ class ApiTests {
     fun t08deleteFamilyTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            api.deleteFamily(1)
+            api.deleteFamily(familyID)
         }
     }
 
@@ -124,7 +135,7 @@ class ApiTests {
         launch(Dispatchers.Default) {
             api.editShoppingList(listID, RemoteShoppingList(listID, "Lidl", null))
         }
-    }
+    } // TODO végtelen dolgokat akar visszaadni
 
     @Test
     fun t11getShoppingListTest(): Unit = runBlocking {
@@ -132,9 +143,15 @@ class ApiTests {
         launch(Dispatchers.Default) {
             val l = api.getShoppingList(listID)
             val l2 = RemoteShoppingList(listID, "Lidl", null)
-            assertEquals(l2, l)
+            assertEquals(l2.ID, l.ID)
+            assertEquals(l2.name, l.name)
         }
     }
+    /*
+
+    Expected :RemoteShoppingList(ID=21, name=Lidl, family=null, users=null, remoteShoppingItems=null)
+    Actual   :RemoteGetShoppingList(ID=0, name=Lidl, familyID=0, userIDs=[13], shoppingItemIDs=[])
+    */
 
     @Test
     fun t12addUserToShoppingListTest(): Unit = runBlocking {
@@ -173,7 +190,7 @@ class ApiTests {
         launch(Dispatchers.Default) {
             api.markDoneShoppingListItem(listID, itemID)
         }
-    }
+    } // TODO vegtelen megint
 
     @Test
     fun t17undoneShoppingItemTest(): Unit = runBlocking {
@@ -181,7 +198,7 @@ class ApiTests {
         launch(Dispatchers.Default) {
             api.markUndoneShoppingListItem(listID, itemID)
         }
-    }
+    } // TODO vegtelen megint
 
     @Test
     fun t18editShoppingItemTest(): Unit = runBlocking {
@@ -189,7 +206,7 @@ class ApiTests {
         launch(Dispatchers.Default) {
             api.editShoppingListItem(listID, itemID, RemoteShoppingItem(itemID, "Alma", false, null))
         }
-    }
+    } // TODO vegtelen megint
 
     @Test
     fun t19getAllShoppingItemTest(): Unit = runBlocking {
@@ -204,10 +221,10 @@ class ApiTests {
 
         launch(Dispatchers.Default) {
             val i = api.getShoppingListItem(listID, itemID)
-            val i2 = RemoteShoppingItem(itemID, "Alma", false, null)
-            assertEquals(i, i2)
+            val i2 = RemoteGetShoppingItem(itemID, "Alma", false, null)
+            assertEquals(i2, i)
         }
-    }
+    } // TODO 1 idju get kéréshez 0 es idju itemet kaptam
 
     @Test
     fun t21deleteShoppingItemTest(): Unit = runBlocking {
@@ -218,7 +235,7 @@ class ApiTests {
     }
 
     @Test
-    fun t22eleteShoppingListTest(): Unit = runBlocking {
+    fun t22deleteShoppingListTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.deleteShoppingList(listID)
@@ -229,17 +246,20 @@ class ApiTests {
     fun t23editUserTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            api.editUser(userID, RemoteUser("newtest@email.hu", "password"))
+            api.editUser(userID, RemoteUser("newtest@email.hu", user.password, id = userID))
         }
-    }
+    } // TODO UserID not match with the userE's id
+    // https://family-app-kotlin-backend.herokuapp.com/api/user/13
+    // {"email":"newtest@email.hu","password":"Test1234","id":13}
 
     @Test
     fun t24getUserTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             val u = api.getUser(userID)
-            val u2 = RemoteUser("newtest@email.hu", "password")
-            assertEquals(u, u2)
+            val u2 = RemoteGetUser(email = user.email, password = user.password, id = userID)
+            assertEquals(u2.email, u.email)
+            assertEquals(u2.id, u.id)
         }
     }
 
@@ -254,7 +274,7 @@ class ApiTests {
     fun t26getUserInvitesTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            val invs = api.getUserInvites(userID)
+            val invs = api.getUserInvite(userID)
         }
     }
 
@@ -264,5 +284,5 @@ class ApiTests {
         launch(Dispatchers.Default) {
             api.deleteUser(userID)
         }
-    }
+    } // TODO 204 no content
 }

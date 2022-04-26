@@ -12,10 +12,10 @@ interface FamilyAPI {
 
     // Auth
     @POST("$url/login")
-    suspend fun login(@Body user: RemoteCreateUser)
+    suspend fun login(@Body user: RemoteCreateUser) //
 
     @POST("$url/register")
-    suspend fun register(@Body user: RemoteCreateUser): Int
+    suspend fun register(@Body user: RemoteCreateUser): RemoteUser
 
     // User
     @GET("$url/user/{id}")
@@ -38,11 +38,10 @@ interface FamilyAPI {
         @Body invite: RemoteCreateInvite
     )
 
-    // TODO ilyen fgv nincs
-    @PUT("$url/user/{id}/invites")
-    suspend fun getUserInvites(
+    @GET("$url/user/{id}/invite")
+    suspend fun getUserInvite(
         @Path("id") userID: Int
-    ): List<Int>?
+    ): RemoteGetInvite?
 
     // Family
     @GET("$url/family/{id}")
@@ -63,7 +62,7 @@ interface FamilyAPI {
     suspend fun createFamily(
         @Body family: RemoteFamily
         // TODO backend picture bytearray-t vár --> meeting
-    )
+    ): RemoteFamily
 
     @PUT("$url/family/{id}/adduser")
     suspend fun addFamilyMember(
@@ -128,14 +127,14 @@ interface FamilyAPI {
 
     @PUT("$url/shoppinglist/{listID}/shoppingitem/{itemID}")
     suspend fun editShoppingListItem(
-        @Path("id") listID: Int,
+        @Path("listID") listID: Int,
         @Path("itemID") itemID: Int,
         @Body item: RemoteShoppingItem
     )
 
     @DELETE("$url/shoppinglist/{listID}/shoppingitem/{itemID}")
     suspend fun deleteShoppingListItem(
-        @Path("id") listID: Int,
+        @Path("listID") listID: Int,
         @Path("itemID") itemID: Int
     )
 
@@ -147,18 +146,18 @@ interface FamilyAPI {
 
     @GET("$url/shoppinglist/{listID}/shoppingitem/all")
     suspend fun getShoppingListItemsFromList(
-        @Path("id") listID: Int
+        @Path("listID") listID: Int
     ): List<RemoteGetShoppingItem>? // TODO backend más
 
     @PUT("$url/shoppinglist/{listID}/shoppingitem/{itemID}/done")
     suspend fun markDoneShoppingListItem(
-        @Path("id") listID: Int,
+        @Path("listID") listID: Int,
         @Path("itemID") itemID: Int
     )
 
     @PUT("$url/shoppinglist/{listID}/shoppingitem/{itemID}/undone")
     suspend fun markUndoneShoppingListItem(
-        @Path("id") listID: Int,
+        @Path("listID") listID: Int,
         @Path("itemID") itemID: Int
     )
 }
