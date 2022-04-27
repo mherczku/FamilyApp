@@ -3,7 +3,7 @@ package hu.hm.familyapp.data.remote.models
 data class RemoteUser(
     val email: String,
     val password: String,
-    val id: Int,
+    val ID: Int,
     val phonenumber: String? = null,
     val firstname: String? = null,
     val lastname: String? = null,
