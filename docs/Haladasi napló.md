@@ -71,6 +71,9 @@
 
 ### Tizenegyedik hét:
 
+- [x] JWT authentikáció implementálása és konfigurálása
+- [x] Backend hibáinak javítása és tesztelése
+
 ### Tizenkettedik hét:
 
 ### Tizenharmadik hét:

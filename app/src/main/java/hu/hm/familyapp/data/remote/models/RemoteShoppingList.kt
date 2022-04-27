@@ -1,7 +1,7 @@
 package hu.hm.familyapp.data.remote.models
 
 data class RemoteShoppingList(
-    val ID: Int,
+    val id: Int,
 
     val name: String,
 
