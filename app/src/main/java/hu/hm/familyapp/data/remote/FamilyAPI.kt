@@ -32,9 +32,9 @@ interface FamilyAPI {
         @Path("id") userID: Int,
     )
 
-    @PUT("$url/user/{id}/sendinvite")
+    @PUT("$url/user/sendinvite")
     suspend fun inviteUser(
-        @Path("id") userID: Int,
+        // @Path("id") userID: Int,
         @Body invite: RemoteCreateInvite
     )
 
