@@ -1,5 +1,7 @@
 package hu.hm.familyapp.data.remote.models
 
+import java.util.Date
+
 data class RemoteGetUser(
     val id: Int = 0,
     val email: String,
@@ -11,5 +13,6 @@ data class RemoteGetUser(
     val category: String? = null,
     var familyID: Int? = null,
     var inviteID: Int? = null,
-    var shoppingListIDs: List<Int>? = null
+    var shoppingListIDs: List<Int>? = null,
+    val lastModTime: Date? = null
 )

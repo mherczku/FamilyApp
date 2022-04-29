@@ -1,6 +1,5 @@
 package hu.hm.familyapp.data.remote
 
-import hu.hm.familyapp.data.model.*
 import hu.hm.familyapp.data.remote.models.*
 import retrofit2.http.*
 
@@ -34,7 +33,6 @@ interface FamilyAPI {
 
     @PUT("$url/user/sendinvite")
     suspend fun inviteUser(
-        // @Path("id") userID: Int,
         @Body invite: RemoteCreateInvite
     )
 
@@ -104,7 +102,7 @@ interface FamilyAPI {
     @GET("$url/shoppinglist/byuser/{id}")
     suspend fun getShoppingListsByUser(
         @Path("id") userID: Int
-    ): List<Int> // TODO backend missing
+    ): List<Int>
 
     @PUT("$url/shoppinglist/{id}/adduser")
     suspend fun addFamilyMemberToList(
@@ -142,12 +140,12 @@ interface FamilyAPI {
     suspend fun addShoppingListItem(
         @Path("listID") listID: Int,
         @Body shoppingItem: RemoteCreateShoppingItem
-    ): Int // TODO backend visszaadja e az id-t
+    ): Int
 
     @GET("$url/shoppinglist/{listID}/shoppingitem/all")
     suspend fun getShoppingListItemsFromList(
         @Path("listID") listID: Int
-    ): List<RemoteGetShoppingItem>? // TODO backend más
+    ): List<RemoteGetShoppingItem>?
 
     @PUT("$url/shoppinglist/{listID}/shoppingitem/{itemID}/done")
     suspend fun markDoneShoppingListItem(

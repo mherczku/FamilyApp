@@ -75,7 +75,7 @@ class ApiTests {
 
         launch(Dispatchers.Default) {
             val a: RemoteFamily = api.createFamily(RemoteFamily(familyID))
-            familyID = a.id // TODO kisbetűs / nagybetűs idk....
+            familyID = a.id
         }
     }
 
@@ -191,7 +191,7 @@ class ApiTests {
     fun t18editShoppingItemTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            api.editShoppingListItem(listID, itemID, RemoteShoppingItem(itemID, "Alma", false, null))
+            api.editShoppingListItem(listID, itemID, RemoteShoppingItem(itemID, "Alma", false, null, null))
         }
     }
 

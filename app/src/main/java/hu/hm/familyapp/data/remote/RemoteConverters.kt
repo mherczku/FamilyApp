@@ -13,7 +13,7 @@ fun RoomShoppingList.convertToRemoteCreateShoppingList(familyID: Int?): RemoteCr
 fun RemoteGetShoppingList.convertToRoomShoppingList(items: List<RemoteGetShoppingItem>?): RoomShoppingList {
     val roomItems = mutableListOf<RoomShoppingListItem>()
     if (items != null) {
-        for(item in items){
+        for (item in items) {
             roomItems.add(item.convertToRoomShoppingListItem())
         }
     }
