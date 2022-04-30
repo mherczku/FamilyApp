@@ -14,7 +14,7 @@ interface FamilyAPI {
     suspend fun login(@Body user: RemoteCreateUser) //
 
     @POST("$url/register")
-    suspend fun register(@Body user: RemoteCreateUser): RemoteUser
+    suspend fun register(@Body user: RemoteCreateUser): RemoteGetUser // TODO!!! GETes DTO-t adjon vissza
 
     // User
     @GET("$url/user/{id}")

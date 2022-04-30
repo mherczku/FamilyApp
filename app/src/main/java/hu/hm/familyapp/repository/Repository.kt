@@ -8,10 +8,11 @@ import hu.hm.familyapp.data.local.model.RoomShoppingList
 import hu.hm.familyapp.data.local.model.RoomShoppingListItem
 import hu.hm.familyapp.data.model.ShoppingList
 import hu.hm.familyapp.data.model.User
-import hu.hm.familyapp.data.remote.FamilyAPI
-import hu.hm.familyapp.data.remote.convertToRemoteCreateShoppingList
-import hu.hm.familyapp.data.remote.convertToRoomShoppingList
+import hu.hm.familyapp.data.remote.*
+import hu.hm.familyapp.data.remote.models.RemoteCreateInvite
 import hu.hm.familyapp.data.remote.models.RemoteCreateShoppingItem
+import hu.hm.familyapp.data.remote.models.RemoteCreateUser
+import hu.hm.familyapp.data.remote.models.RemoteGetInvite
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
@@ -24,28 +25,93 @@ class Repository @Inject constructor(
     private val familyAPI: FamilyAPI
 ) {
     var deviceOnline: Boolean = false
-    var user: User = User()
+    var currentUser: User? = null
 
     suspend fun syncronizeDBwithAPI() = withContext(Dispatchers.IO) {
+        if (deviceOnline) {
+            if (currentUser != null) {
+                Timber.d("Synchronizing DB with API")
+                val remoteListIds = familyAPI.getShoppingListsByUser(currentUser!!.id)
+                val remoteLists = mutableListOf<RoomShoppingList>()
+                for (id in remoteListIds) {
+                    val list = familyAPI.getShoppingList(id)
+                    val items = familyAPI.getShoppingListItemsFromList(id)
+                    remoteLists.add(list.convertToRoomShoppingList(items))
+                }
+
+                for (remoteList in remoteLists) {
+                    val localList = familyDao.getShoppingListById(remoteList.id.toString())
+                    if (localList == null) {
+                        familyDao.insertShoppingList(remoteList)
+                    } else if (localList.lastModTime < remoteList.lastModTime) {
+                        familyDao.setShoppingList(remoteList)
+                    } else if (localList.lastModTime > remoteList.lastModTime) {
+                        familyAPI.editShoppingList(
+                            localList.id,
+                            localList.convertToRemoteShoppingList()
+                        )
+                    }
+                }
+            } else Timber.d("Synchronization failed, currentUser = null")
+        }
     }
 
-    suspend fun login() = withContext(Dispatchers.IO) {
+    suspend fun login(email: String, password: String) = withContext(Dispatchers.IO) {
         if (deviceOnline) {
+            try {
+                Timber.d("Logging in with $email")
+                // TODO login visszaadhatna valamit hogy tudjuk ha sikeresen belépett, tokenen kivul, boolean vagy user maga pl.
+                familyAPI.login(RemoteCreateUser(password, email))
+                currentUser = User(id = 1) // TODO kéne legalább a bejelentkezett felhasználó idja, de inkább az egész
+            } catch (e: Exception) {
+                Timber.d("Error while login: ${e.message}")
+                return@withContext
+            }
+        }
+    }
+
+    suspend fun register(email: String, password: String) = withContext(Dispatchers.IO) {
+        if (deviceOnline) {
+            try {
+                Timber.d("Registering for $email")
+                val user = familyAPI.register(RemoteCreateUser(password, email))
+                currentUser = user.convertToUser()
+            } catch (e: Exception) {
+                Timber.d("Error while register: ${e.message}")
+                return@withContext
+            }
+        }
+    }
+
+    suspend fun getInvite(): RemoteGetInvite? = withContext(Dispatchers.IO) {
+        if (deviceOnline && currentUser != null) {
+            Timber.d("Getting invite for user")
+            return@withContext familyAPI.getUserInvite(currentUser!!.id)
+        }
+        return@withContext null
+    }
+
+    suspend fun invite(email: String) = withContext(Dispatchers.IO) {
+        if (deviceOnline && currentUser != null) {
+            Timber.d("Inviting $email to family ${currentUser!!.familyID}")
+            familyAPI.inviteUser(RemoteCreateInvite(email, currentUser!!.familyID))
         }
     }
 
     suspend fun getShoppingLists(): List<ShoppingList> = withContext(Dispatchers.IO) {
         if (deviceOnline) {
             Timber.d("Getting Shopping Lists from API")
-            val listIds = familyAPI.getShoppingListsByUser(user.id)
-            val lists = mutableListOf<RoomShoppingList>()
-            for (id in listIds) {
-                val list = familyAPI.getShoppingList(id)
-                val items = familyAPI.getShoppingListItemsFromList(id)
+            if (currentUser != null) {
+                val listIds = familyAPI.getShoppingListsByUser(currentUser!!.id)
+                val lists = mutableListOf<RoomShoppingList>()
+                for (id in listIds) {
+                    val list = familyAPI.getShoppingList(id)
+                    val items = familyAPI.getShoppingListItemsFromList(id)
 
-                lists.add(list.convertToRoomShoppingList(items))
-            }
-            familyDao.setShoppingLists(lists)
+                    lists.add(list.convertToRoomShoppingList(items))
+                }
+                familyDao.setShoppingLists(lists)
+            } else Timber.d("Getting Shopping Lists from API Failed, currentUser = null")
         }
         Timber.d("Loading Shopping Lists from DB")
         val list = familyDao.getAllShoppingLists().map {
