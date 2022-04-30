@@ -57,7 +57,7 @@ class ApiTests {
     fun t01registerUserTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            user = api.register(RemoteCreateUser("Test1234", "test@test16.hu"))
+            user = api.register(RemoteCreateUser("Test1234", "test@test17.hu"))
             userID = user.id
         }
     }

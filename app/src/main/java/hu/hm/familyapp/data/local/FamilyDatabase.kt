@@ -2,7 +2,6 @@ package hu.hm.familyapp.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import hu.hm.familyapp.data.local.model.ListConverter
 import hu.hm.familyapp.data.local.model.RoomShoppingList

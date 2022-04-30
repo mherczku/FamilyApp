@@ -7,5 +7,5 @@ data class RemoteGetFamily(
     var userIDs: List<Int>? = null,
     var shoppingListIDs: List<Int>? = null,
     var inviteIDs: List<Int>? = null,
-    val lastModTime: Date? = null,
+    val lastModTime: Date? = null
 )
