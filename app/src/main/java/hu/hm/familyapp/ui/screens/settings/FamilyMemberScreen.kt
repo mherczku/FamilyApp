@@ -36,7 +36,7 @@ fun FamilyMemberScreen(
         Text(
             modifier = Modifier
                 .fillMaxWidth(),
-            text = viewModel.user.value.username,
+            text = viewModel.user.value.username.toString(),
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 2.sp
@@ -61,7 +61,7 @@ fun FamilyMemberScreen(
         Text(
             modifier = Modifier
                 .padding(start = 20.dp),
-            text = viewModel.user.value.username,
+            text = viewModel.user.value.username.toString(),
             fontSize = 20.sp,
         )
         Spacer(Modifier.padding(8.dp))
@@ -77,7 +77,7 @@ fun FamilyMemberScreen(
         Text(
             modifier = Modifier
                 .padding(start = 20.dp),
-            text = viewModel.user.value.phoneNumber,
+            text = viewModel.user.value.phoneNumber.toString(),
             fontSize = 20.sp,
         )
         Spacer(Modifier.padding(8.dp))

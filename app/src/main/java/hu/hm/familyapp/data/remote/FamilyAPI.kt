@@ -11,10 +11,10 @@ interface FamilyAPI {
 
     // Auth
     @POST("$url/login")
-    suspend fun login(@Body user: RemoteCreateUser) //
+    suspend fun login(@Body user: RemoteCreateUser): RemoteGetUser //
 
     @POST("$url/register")
-    suspend fun register(@Body user: RemoteCreateUser): RemoteGetUser // TODO!!! GETes DTO-t adjon vissza
+    suspend fun register(@Body user: RemoteCreateUser): RemoteGetUser
 
     // User
     @GET("$url/user/{id}")
@@ -60,7 +60,7 @@ interface FamilyAPI {
     suspend fun createFamily(
         @Body family: RemoteFamily
         // TODO backend picture bytearray-t vár --> meeting
-    ): RemoteFamily
+    ): RemoteGetFamily
 
     @PUT("$url/family/{id}/adduser")
     suspend fun addFamilyMember(

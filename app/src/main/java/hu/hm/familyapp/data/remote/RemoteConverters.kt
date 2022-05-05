@@ -44,9 +44,9 @@ fun RoomShoppingList.convertToRemoteShoppingList(): RemoteShoppingList {
     return RemoteShoppingList(
         id = id,
         name = name,
-        family = null, // TODO ezt én nem tudom beállítani tehát backendnek kéne korrigálni...
-        users = null, // TODO ezt én nem tudom beállítani tehát backendnek kéne korrigálni...
-        lastModTime = lastModTime,
+        family = null,
+        users = null,
+        //lastModTime = lastModTime,
         remoteShoppingItems = items.convertToRemoteListOfShoppingItems()
     )
 }
@@ -59,8 +59,8 @@ fun List<RoomShoppingListItem>.convertToRemoteListOfShoppingItems(): List<Remote
                 id = item.id,
                 name = item.name,
                 done = item.done,
-                lastModTime = item.lastModTime,
-                remoteShoppingList = null // TODO ezt én nem tudom beállítani tehát backendnek kéne korrigálni...
+                //lastModTime = item.lastModTime,
+                remoteShoppingList = null
             )
         )
     }

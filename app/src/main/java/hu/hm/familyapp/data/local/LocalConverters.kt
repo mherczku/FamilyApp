@@ -19,6 +19,6 @@ fun convertToRoomShoppingListItem(shoppingListItem: ShoppingListItem): RoomShopp
         id = shoppingListItem.id,
         name = shoppingListItem.name,
         done = shoppingListItem.done,
-        lastModTime = Date(System.currentTimeMillis())
+        //lastModTime = Date(System.currentTimeMillis())
     )
 }

@@ -2,7 +2,7 @@ package hu.hm.familyapp.data.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
+import java.sql.Date
 
 @Entity(tableName = "lists")
 data class RoomShoppingList(
@@ -10,5 +10,5 @@ data class RoomShoppingList(
     val id: Int,
     val name: String,
     var items: List<RoomShoppingListItem>,
-    val lastModTime: Date = Date(System.currentTimeMillis())
+    //val lastModTime: Date? = Date(System.currentTimeMillis())
 )

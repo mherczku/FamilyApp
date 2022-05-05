@@ -9,10 +9,7 @@ import hu.hm.familyapp.data.local.model.RoomShoppingListItem
 import hu.hm.familyapp.data.model.ShoppingList
 import hu.hm.familyapp.data.model.User
 import hu.hm.familyapp.data.remote.*
-import hu.hm.familyapp.data.remote.models.RemoteCreateInvite
-import hu.hm.familyapp.data.remote.models.RemoteCreateShoppingItem
-import hu.hm.familyapp.data.remote.models.RemoteCreateUser
-import hu.hm.familyapp.data.remote.models.RemoteGetInvite
+import hu.hm.familyapp.data.remote.models.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +36,7 @@ class Repository @Inject constructor(
                     remoteLists.add(list.convertToRoomShoppingList(items))
                 }
 
-                for (remoteList in remoteLists) {
+                /*for (remoteList in remoteLists) {
                     val localList = familyDao.getShoppingListById(remoteList.id.toString())
                     if (localList == null) {
                         familyDao.insertShoppingList(remoteList)
@@ -51,7 +48,7 @@ class Repository @Inject constructor(
                             localList.convertToRemoteShoppingList()
                         )
                     }
-                }
+                }*/
             } else Timber.d("Synchronization failed, currentUser = null")
         }
     }
@@ -94,8 +91,44 @@ class Repository @Inject constructor(
     suspend fun invite(email: String) = withContext(Dispatchers.IO) {
         if (deviceOnline && currentUser != null) {
             Timber.d("Inviting $email to family ${currentUser!!.familyID}")
-            familyAPI.inviteUser(RemoteCreateInvite(email, currentUser!!.familyID))
+            familyAPI.inviteUser(RemoteCreateInvite(email, currentUser!!.familyID!!.toInt()))
         }
+    }
+
+    suspend fun editProfile(newUserData: RemoteUser) = withContext(Dispatchers.IO) {
+        if (deviceOnline && currentUser != null) {
+            Timber.d("Updating profile ${currentUser!!.id}")
+            familyAPI.editUser(currentUser!!.id, newUserData)
+        }
+    }
+
+    suspend fun getFamily(): RemoteGetFamily? = withContext(Dispatchers.IO) {
+        if (deviceOnline && currentUser != null) {
+            if (currentUser!!.familyID == null) {
+                Timber.d("Current user has no family ID")
+                return@withContext null
+            }
+            Timber.d("Getting user family data ${currentUser!!.id}, ${currentUser!!.familyID}")
+            return@withContext familyAPI.getFamily(currentUser!!.familyID!!.toInt())
+        }
+        return@withContext null
+    }
+
+    suspend fun editFamily(newFamilyData: RemoteFamily) = withContext(Dispatchers.IO) {
+        if (deviceOnline && currentUser != null) {
+            if (currentUser!!.familyID != null) {
+                Timber.d("Updating family ${currentUser!!.familyID}")
+                familyAPI.editFamily(currentUser!!.familyID!!.toInt(), newFamilyData)
+            } else Timber.d("User has no family ID")
+        }
+    }
+
+    suspend fun createFamily(newFamily: RemoteFamily): RemoteGetFamily? = withContext(Dispatchers.IO) {
+        if (deviceOnline && currentUser != null) {
+            Timber.d("Creating family for ${currentUser!!.id}")
+            return@withContext familyAPI.createFamily(newFamily)
+        }
+        return@withContext null
     }
 
     suspend fun getShoppingLists(): List<ShoppingList> = withContext(Dispatchers.IO) {

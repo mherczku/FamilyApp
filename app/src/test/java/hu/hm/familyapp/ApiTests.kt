@@ -21,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ApiTests {
 
     companion object {
-        private var user: RemoteUser = RemoteUser(email = "test@test5.hu", password = "Test1234", id = 13)
+        private var user: RemoteGetUser = RemoteGetUser(email = "test@test5.hu", password = "Test1234", id = 13)
         private var userID = 13
         private var listID = 21
         private var itemID = 1
@@ -57,7 +57,7 @@ class ApiTests {
     fun t01registerUserTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            user = api.register(RemoteCreateUser("Test1234", "test@test17.hu"))
+            user = api.register(RemoteCreateUser("Test1234", "test@test19.hu"))
             userID = user.id
         }
     }
@@ -74,7 +74,7 @@ class ApiTests {
     fun t03createFamilyTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            val a: RemoteFamily = api.createFamily(RemoteFamily(familyID))
+            val a: RemoteGetFamily = api.createFamily(RemoteFamily(familyID))
             familyID = a.id
         }
     }
@@ -149,7 +149,7 @@ class ApiTests {
     }
 
     @Test
-    fun t13removeUserToShoppingListTest(): Unit = runBlocking {
+    fun t13removeUserFromShoppingListTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.removeFamilyMemberFromList(listID, userID)
@@ -245,6 +245,20 @@ class ApiTests {
             val p = api.inviteUser(i)
         }
     }
+
+    @Test
+    fun t25inviteUserTest2(): Unit = runBlocking {
+
+        launch(Dispatchers.Default) {
+            val f = api.getFamily(familyID)
+            assertEquals(familyID, f.id)
+            val u = api.getUser(userID)
+            assertEquals("newtest@email.hu", u.email)
+            val i = RemoteCreateInvite("newtest@email.hu", 67)
+            val p = api.inviteUser(i)
+        }
+    }
+
     @Test
     fun t26getUserInvitesTest(): Unit = runBlocking {
 
