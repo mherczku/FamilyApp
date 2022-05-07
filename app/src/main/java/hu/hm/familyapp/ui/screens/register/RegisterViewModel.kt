@@ -4,12 +4,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.hm.familyapp.repository.Repository
 import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor() : ViewModel() {
+class RegisterViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
 
     val emailValue = mutableStateOf("")
     val passwordValue = mutableStateOf("")
@@ -19,9 +20,8 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
     fun register(success: () -> Unit) {
         viewModelScope.launch {
             loading.value = true
-            delay(2000)
+            if(repository.register(emailValue.value, passwordValue.value)) success()
             loading.value = false
-            success()
         }
     }
 }
