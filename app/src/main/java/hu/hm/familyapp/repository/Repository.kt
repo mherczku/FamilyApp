@@ -1,7 +1,12 @@
 package hu.hm.familyapp.repository
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import android.os.Build
 import androidx.annotation.RequiresApi
+import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.hm.familyapp.data.local.FamilyDao
 import hu.hm.familyapp.data.local.convertToShoppingList
 import hu.hm.familyapp.data.local.model.RoomShoppingList
@@ -9,6 +14,7 @@ import hu.hm.familyapp.data.local.model.RoomShoppingListItem
 import hu.hm.familyapp.data.model.ShoppingList
 import hu.hm.familyapp.data.remote.*
 import hu.hm.familyapp.data.remote.models.*
+import java.util.prefs.Preferences
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
@@ -17,21 +23,30 @@ import timber.log.Timber
 
 @Singleton
 class Repository @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val familyDao: FamilyDao,
     private val familyAPI: FamilyAPI
 ) {
-    var deviceOnline: Boolean = false
+    var deviceOnline: Boolean = isNetAvailable()
     var currentUser: RemoteGetUser? = null
+    val sharedPreferences: SharedPreferences = context.getSharedPreferences("family", Context.MODE_PRIVATE)
+
+    @SuppressLint("MissingPermission")
+    fun isNetAvailable(): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetworkInfo = connectivityManager.activeNetworkInfo
+        return (activeNetworkInfo != null && activeNetworkInfo.isConnected)
+    }
 
     suspend fun syncronizeDBwithAPI() = withContext(Dispatchers.IO) {
         if (deviceOnline) {
             if (currentUser != null) {
                 Timber.d("Synchronizing DB with API")
-                val remoteListIds = familyAPI.getShoppingListsByUser(currentUser!!.id)
+                val remoteGetlists = familyAPI.getShoppingListsByUser(currentUser!!.id)
                 val remoteLists = mutableListOf<RoomShoppingList>()
-                for (id in remoteListIds) {
-                    val list = familyAPI.getShoppingList(id)
-                    val items = familyAPI.getShoppingListItemsFromList(id)
+                for (list in remoteGetlists) {
+                    val items = familyAPI.getShoppingListItemsFromList(list.id)
                     remoteLists.add(list.convertToRoomShoppingList(items))
                 }
 
@@ -57,11 +72,28 @@ class Repository @Inject constructor(
             try {
                 Timber.d("Logging in with $email")
                 currentUser = familyAPI.login(RemoteCreateUser(password, email))
+                val cookie = Preferences.userRoot().get("cookie", "")
+                if (cookie.isNotEmpty()) sharedPreferences.edit().putString("cookie", cookie).apply()
+                sharedPreferences.edit().putString("userID", currentUser!!.id.toString()).apply()
+                syncronizeDBwithAPI()
             } catch (e: Exception) {
                 Timber.d("Error while login: ${e.message}")
                 return@withContext
             }
         }
+    }
+
+    suspend fun getUser(userID: String): RemoteGetUser? = withContext(Dispatchers.IO) {
+        if (deviceOnline) {
+            try {
+                Timber.d("Getting user $userID")
+                return@withContext familyAPI.getUser(userID.toInt())
+            } catch (e: Exception) {
+                Timber.d("Error while login: ${e.message}")
+                return@withContext null
+            }
+        }
+        return@withContext null
     }
 
     suspend fun register(email: String, password: String): Boolean = withContext(Dispatchers.IO) {
@@ -80,23 +112,36 @@ class Repository @Inject constructor(
 
     suspend fun getInvite(): RemoteGetInvite? = withContext(Dispatchers.IO) {
         if (deviceOnline && currentUser != null) {
-            Timber.d("Getting invite for user")
-            return@withContext familyAPI.getUserInvite(currentUser!!.id)
+            try {
+                Timber.d("Getting invite for user")
+                return@withContext familyAPI.getUserInvite(currentUser!!.id)
+            } catch (e: Exception) {
+                Timber.d("Error while getting invite: ${e.message}")
+                return@withContext null
+            }
         }
         return@withContext null
     }
 
     suspend fun invite(email: String) = withContext(Dispatchers.IO) {
         if (deviceOnline && currentUser != null) {
-            Timber.d("Inviting $email to family ${currentUser!!.familyID}")
-            familyAPI.inviteUser(RemoteCreateInvite(email, currentUser!!.familyID!!.toInt()))
+            try {
+                Timber.d("Inviting $email to family ${currentUser!!.familyID}")
+                familyAPI.inviteUser(RemoteCreateInvite(email, currentUser!!.familyID!!.toInt()))
+            } catch (e: Exception) {
+                Timber.d("Error while register: ${e.message}")
+            }
         }
     }
 
     suspend fun editProfile(newUserData: RemoteUser) = withContext(Dispatchers.IO) {
         if (deviceOnline && currentUser != null) {
-            Timber.d("Updating profile ${currentUser!!.id}")
-            familyAPI.editUser(currentUser!!.id, newUserData)
+            try {
+                Timber.d("Updating profile ${currentUser!!.id}")
+                familyAPI.editUser(currentUser!!.id, newUserData)
+            } catch (e: Exception) {
+                Timber.d("Error while editing profile: ${e.message}")
+            }
         }
     }
 
@@ -106,8 +151,13 @@ class Repository @Inject constructor(
                 Timber.d("Current user has no family ID")
                 return@withContext null
             }
-            Timber.d("Getting user family data ${currentUser!!.id}, ${currentUser!!.familyID}")
-            return@withContext familyAPI.getFamily(currentUser!!.familyID!!.toInt())
+            try {
+                Timber.d("Getting user family data ${currentUser!!.id}, ${currentUser!!.familyID}")
+                return@withContext familyAPI.getFamily(currentUser!!.familyID!!.toInt())
+            } catch (e: Exception) {
+                Timber.d("Error while getting family: ${e.message}")
+                return@withContext null
+            }
         }
         return@withContext null
     }
@@ -115,8 +165,13 @@ class Repository @Inject constructor(
     suspend fun editFamily(newFamilyData: RemoteFamily) = withContext(Dispatchers.IO) {
         if (deviceOnline && currentUser != null) {
             if (currentUser!!.familyID != null) {
-                Timber.d("Updating family ${currentUser!!.familyID}")
-                familyAPI.editFamily(currentUser!!.familyID!!.toInt(), newFamilyData)
+                try {
+                    Timber.d("Updating family ${currentUser!!.familyID}")
+                    familyAPI.editFamily(currentUser!!.familyID!!.toInt(), newFamilyData)
+                } catch (e: Exception) {
+                    Timber.d("Error while updating family: ${e.message}")
+                    return@withContext
+                }
             } else Timber.d("User has no family ID")
         }
     }
@@ -124,8 +179,13 @@ class Repository @Inject constructor(
     suspend fun createFamily(newFamily: RemoteFamily): RemoteGetFamily? =
         withContext(Dispatchers.IO) {
             if (deviceOnline && currentUser != null) {
-                Timber.d("Creating family for ${currentUser!!.id}")
-                return@withContext familyAPI.createFamily(newFamily)
+                try {
+                    Timber.d("Creating family for ${currentUser!!.id}")
+                    return@withContext familyAPI.createFamily(newFamily)
+                } catch (e: Exception) {
+                    Timber.d("Error while creating family: ${e.message}")
+                    return@withContext null
+                }
             }
             return@withContext null
         }
@@ -134,15 +194,18 @@ class Repository @Inject constructor(
         if (deviceOnline) {
             Timber.d("Getting Shopping Lists from API")
             if (currentUser != null) {
-                val listIds = familyAPI.getShoppingListsByUser(currentUser!!.id)
-                val lists = mutableListOf<RoomShoppingList>()
-                for (id in listIds) {
-                    val list = familyAPI.getShoppingList(id)
-                    val items = familyAPI.getShoppingListItemsFromList(id)
+                try {
+                    val remoteLists = familyAPI.getShoppingListsByUser(currentUser!!.id)
+                    val lists = mutableListOf<RoomShoppingList>()
+                    for (list in remoteLists) {
+                        val items = familyAPI.getShoppingListItemsFromList(list.id)
 
-                    lists.add(list.convertToRoomShoppingList(items))
+                        lists.add(list.convertToRoomShoppingList(items))
+                    }
+                    familyDao.setShoppingLists(lists)
+                } catch (e: Exception) {
+                    Timber.d("Error while getting shoppingLists: ${e.message}")
                 }
-                familyDao.setShoppingLists(lists)
             } else Timber.d("Getting Shopping Lists from API Failed, currentUser = null")
         }
         Timber.d("Loading Shopping Lists from DB")
@@ -154,12 +217,14 @@ class Repository @Inject constructor(
 
     suspend fun addShoppingList(shoppingList: RoomShoppingList) = withContext(Dispatchers.IO) {
         if (deviceOnline) {
-            Timber.d("Adding Shopping List to API")
-            familyAPI.createShoppingList(
-                shoppingList.convertToRemoteCreateShoppingList(
-                    null
+            try {
+                Timber.d("Adding Shopping List to API")
+                familyAPI.createShoppingList(
+                    shoppingList.convertToRemoteCreateShoppingList(currentUser?.familyID)
                 )
-            )
+            } catch (e: Exception) {
+                Timber.d("Error while creating shoppingList: ${e.message}")
+            }
         } else {
             Timber.d("Adding Shopping List to DB")
             familyDao.insertShoppingList(shoppingList)
@@ -168,8 +233,12 @@ class Repository @Inject constructor(
 
     suspend fun removeShoppingList(listID: Int) = withContext(Dispatchers.IO) {
         if (deviceOnline) {
-            Timber.d("Removing Shopping List $listID from API")
-            familyAPI.deleteShoppingList(listID)
+            try {
+                Timber.d("Removing Shopping List $listID from API")
+                familyAPI.deleteShoppingList(listID)
+            } catch (e: Exception) {
+                Timber.d("Error while removing shoppingList: ${e.message}")
+            }
         } else {
             familyDao.removeShoppingList(listID)
             Timber.d("Removing Shopping List $listID from DB")
@@ -178,11 +247,20 @@ class Repository @Inject constructor(
 
     suspend fun getListById(listID: String): ShoppingList? = withContext(Dispatchers.IO) {
         if (deviceOnline) {
-            Timber.d("Getting List $listID from API")
-            val remoteList = familyAPI.getShoppingList(listID.toInt())
-            val list =
-                remoteList.convertToRoomShoppingList(familyAPI.getShoppingListItemsFromList(listID.toInt()))
-            return@withContext convertToShoppingList(list)
+            try {
+                Timber.d("Getting List $listID from API")
+                val remoteList = familyAPI.getShoppingList(listID.toInt())
+                val list =
+                    remoteList.convertToRoomShoppingList(
+                        familyAPI.getShoppingListItemsFromList(
+                            listID.toInt()
+                        )
+                    )
+                return@withContext convertToShoppingList(list)
+            } catch (e: Exception) {
+                Timber.d("Error while getting shoppingList by id: ${e.message}")
+                return@withContext null
+            }
         } else {
             Timber.d("Getting List $listID from DB")
             val list = familyDao.getShoppingListById(listID = listID) ?: return@withContext null
@@ -193,14 +271,18 @@ class Repository @Inject constructor(
     suspend fun addShoppingItem(theListID: String, roomShoppingListItem: RoomShoppingListItem) =
         withContext(Dispatchers.IO) {
             if (deviceOnline) {
-                Timber.d("Adding Shopping Item to List $theListID to API")
-                familyAPI.addShoppingListItem(
-                    theListID.toInt(),
-                    RemoteCreateShoppingItem(
-                        name = roomShoppingListItem.name,
-                        done = roomShoppingListItem.done
+                try {
+                    Timber.d("Adding Shopping Item to List $theListID to API")
+                    familyAPI.addShoppingListItem(
+                        theListID.toInt(),
+                        RemoteCreateShoppingItem(
+                            name = roomShoppingListItem.name,
+                            done = roomShoppingListItem.done
+                        )
                     )
-                )
+                } catch (e: Exception) {
+                    Timber.d("Error while adding shoppingItem: ${e.message}")
+                }
             } else {
                 Timber.d("Adding Shopping Item to List $theListID to DB")
                 val list = familyDao.getShoppingListById(theListID)
@@ -215,12 +297,19 @@ class Repository @Inject constructor(
     suspend fun checkShoppingItem(theListID: String, roomShoppingListItem: RoomShoppingListItem) =
         withContext(Dispatchers.IO) {
             if (deviceOnline) {
-                if (roomShoppingListItem.done) {
-                    familyAPI.markDoneShoppingListItem(theListID.toInt(), roomShoppingListItem.id)
-                } else familyAPI.markUndoneShoppingListItem(
-                    theListID.toInt(),
-                    roomShoppingListItem.id
-                )
+                try {
+                    if (roomShoppingListItem.done) {
+                        familyAPI.markDoneShoppingListItem(
+                            theListID.toInt(),
+                            roomShoppingListItem.id
+                        )
+                    } else familyAPI.markUndoneShoppingListItem(
+                        theListID.toInt(),
+                        roomShoppingListItem.id
+                    )
+                } catch (e: Exception) {
+                    Timber.d("Error while checking shoppingItem: ${e.message}")
+                }
             } else {
                 val list = familyDao.getShoppingListById(theListID)
                 val items = list?.items?.toMutableList() ?: return@withContext
@@ -233,20 +322,32 @@ class Repository @Inject constructor(
 
     suspend fun getEventsByUser(): List<RemoteEvent>? = withContext(Dispatchers.IO) {
         if (deviceOnline && currentUser != null) {
-            return@withContext familyAPI.getEventsByUser(currentUser!!.id)
+            try {
+                return@withContext familyAPI.getEventsByUser(currentUser!!.id)
+            } catch (e: Exception) {
+                Timber.d("Error while getting events by user: ${e.message}")
+            }
         }
         return@withContext null
     }
 
     suspend fun createEvent(event: RemoteEvent) = withContext(Dispatchers.IO) {
         if (deviceOnline && currentUser != null) {
-            familyAPI.createEvent(event = event)
+            try {
+                familyAPI.createEvent(event = event)
+            } catch (e: Exception) {
+                Timber.d("Error while creating event: ${e.message}")
+            }
         }
     }
 
     suspend fun deleteEvent(eventID: Int) = withContext(Dispatchers.IO) {
         if (deviceOnline && currentUser != null) {
-            familyAPI.deleteEvent(eventID)
+            try {
+                familyAPI.deleteEvent(eventID)
+            } catch (e: Exception) {
+                Timber.d("Error while deleting event: ${e.message}")
+            }
         }
     }
 }

@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.hm.familyapp.repository.Repository
 import javax.inject.Inject
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -20,7 +19,7 @@ class RegisterViewModel @Inject constructor(private val repository: Repository) 
     fun register(success: () -> Unit) {
         viewModelScope.launch {
             loading.value = true
-            if(repository.register(emailValue.value, passwordValue.value)) success()
+            if (repository.register(emailValue.value, passwordValue.value)) success()
             loading.value = false
         }
     }

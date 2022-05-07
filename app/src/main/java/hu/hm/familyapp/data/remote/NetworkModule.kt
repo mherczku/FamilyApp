@@ -72,7 +72,7 @@ class AddCookiesInterceptor : Interceptor {
             println("Cookie ->$cookie")
             builder.addHeader("Cookie", cookie)
             Timber.tag("OkHttp").d("Adding Header: %s", cookie)
-        }
+        } else Timber.wtf("ERROR: NO COOKIE ADDED")
         // This is done so I know which headers are being added; this interceptor is used after the normal logging of OkHttp
         return chain.proceed(builder.build())
     }

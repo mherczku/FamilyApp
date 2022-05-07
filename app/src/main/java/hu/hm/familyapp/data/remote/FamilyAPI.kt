@@ -102,7 +102,7 @@ interface FamilyAPI {
     @GET("$url/shoppinglist/byuser/{id}")
     suspend fun getShoppingListsByUser(
         @Path("id") userID: Int
-    ): List<Int>
+    ): List<RemoteGetShoppingList>
 
     @PUT("$url/shoppinglist/{id}/adduser")
     suspend fun addFamilyMemberToList(

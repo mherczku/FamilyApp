@@ -29,7 +29,8 @@ class EventsViewModel @Inject constructor(private val repository: Repository) : 
     private fun loadEvents() {
         viewModelScope.launch {
             val list = repository.getEventsByUser()
-            items.postValue(list)
+            if(list != null) items.postValue(list)
+            else items.postValue(listOf())
         }
     }
 
