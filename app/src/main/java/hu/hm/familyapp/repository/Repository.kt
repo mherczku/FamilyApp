@@ -7,7 +7,6 @@ import hu.hm.familyapp.data.local.convertToShoppingList
 import hu.hm.familyapp.data.local.model.RoomShoppingList
 import hu.hm.familyapp.data.local.model.RoomShoppingListItem
 import hu.hm.familyapp.data.model.ShoppingList
-import hu.hm.familyapp.data.model.User
 import hu.hm.familyapp.data.remote.*
 import hu.hm.familyapp.data.remote.models.*
 import javax.inject.Inject
@@ -22,7 +21,7 @@ class Repository @Inject constructor(
     private val familyAPI: FamilyAPI
 ) {
     var deviceOnline: Boolean = false
-    var currentUser: User? = null
+    var currentUser: RemoteGetUser? = null
 
     suspend fun syncronizeDBwithAPI() = withContext(Dispatchers.IO) {
         if (deviceOnline) {
@@ -36,7 +35,7 @@ class Repository @Inject constructor(
                     remoteLists.add(list.convertToRoomShoppingList(items))
                 }
 
-                /*for (remoteList in remoteLists) {
+                for (remoteList in remoteLists) {
                     val localList = familyDao.getShoppingListById(remoteList.id.toString())
                     if (localList == null) {
                         familyDao.insertShoppingList(remoteList)
@@ -48,7 +47,7 @@ class Repository @Inject constructor(
                             localList.convertToRemoteShoppingList()
                         )
                     }
-                }*/
+                }
             } else Timber.d("Synchronization failed, currentUser = null")
         }
     }
@@ -57,9 +56,7 @@ class Repository @Inject constructor(
         if (deviceOnline) {
             try {
                 Timber.d("Logging in with $email")
-                // TODO login visszaadhatna valamit hogy tudjuk ha sikeresen belépett, tokenen kivul, boolean vagy user maga pl.
-                familyAPI.login(RemoteCreateUser(password, email))
-                currentUser = User(id = 1) // TODO kéne legalább a bejelentkezett felhasználó idja, de inkább az egész
+                currentUser = familyAPI.login(RemoteCreateUser(password, email))
             } catch (e: Exception) {
                 Timber.d("Error while login: ${e.message}")
                 return@withContext
@@ -72,7 +69,6 @@ class Repository @Inject constructor(
             try {
                 Timber.d("Registering for $email")
                 val user = familyAPI.register(RemoteCreateUser(password, email))
-                currentUser = user.convertToUser()
             } catch (e: Exception) {
                 Timber.d("Error while register: ${e.message}")
                 return@withContext
@@ -217,6 +213,25 @@ class Repository @Inject constructor(
             items.add(roomShoppingListItem)
             list.items = items
             familyDao.setShoppingList(list)
+        }
+    }
+
+    suspend fun getEventsByUser(): List<RemoteEvent>? = withContext(Dispatchers.IO) {
+        if (deviceOnline && currentUser != null) {
+            return@withContext familyAPI.getEventsByUser(currentUser!!.id)
+        }
+        return@withContext null
+    }
+
+    suspend fun createEvent(event: RemoteEvent) = withContext(Dispatchers.IO) {
+        if (deviceOnline && currentUser != null) {
+            familyAPI.createEvent(event = event)
+        }
+    }
+
+    suspend fun deleteEvent(eventID: Int) = withContext(Dispatchers.IO) {
+        if (deviceOnline && currentUser != null) {
+            familyAPI.deleteEvent(eventID)
         }
     }
 }

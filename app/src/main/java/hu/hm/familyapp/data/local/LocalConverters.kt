@@ -4,7 +4,7 @@ import hu.hm.familyapp.data.local.model.RoomShoppingList
 import hu.hm.familyapp.data.local.model.RoomShoppingListItem
 import hu.hm.familyapp.data.model.ShoppingList
 import hu.hm.familyapp.data.model.ShoppingListItem
-import java.util.Date
+import java.sql.Timestamp
 
 fun convertToShoppingList(roomShoppingList: RoomShoppingList): ShoppingList {
     return ShoppingList(
@@ -19,6 +19,6 @@ fun convertToRoomShoppingListItem(shoppingListItem: ShoppingListItem): RoomShopp
         id = shoppingListItem.id,
         name = shoppingListItem.name,
         done = shoppingListItem.done,
-        //lastModTime = Date(System.currentTimeMillis())
+        lastModTime = Timestamp(System.currentTimeMillis())
     )
 }

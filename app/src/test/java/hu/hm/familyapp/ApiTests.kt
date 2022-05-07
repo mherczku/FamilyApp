@@ -57,7 +57,7 @@ class ApiTests {
     fun t01registerUserTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
-            user = api.register(RemoteCreateUser("Test1234", "test@test19.hu"))
+            user = api.register(RemoteCreateUser("Test1234", "test@test22.hu"))
             userID = user.id
         }
     }
@@ -106,7 +106,7 @@ class ApiTests {
     }
 
     @Test
-    fun t07removeUserFromFamilyTest(): Unit = runBlocking {
+    fun t273removeUserFromFamilyTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.removeFamilyMember(familyID, userID)
@@ -149,7 +149,7 @@ class ApiTests {
     }
 
     @Test
-    fun t13removeUserFromShoppingListTest(): Unit = runBlocking {
+    fun t272removeUserFromShoppingListTest(): Unit = runBlocking {
 
         launch(Dispatchers.Default) {
             api.removeFamilyMemberFromList(listID, userID)

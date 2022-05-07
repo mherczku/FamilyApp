@@ -4,6 +4,7 @@ import hu.hm.familyapp.data.local.model.RoomShoppingList
 import hu.hm.familyapp.data.local.model.RoomShoppingListItem
 import hu.hm.familyapp.data.model.User
 import hu.hm.familyapp.data.remote.models.*
+import java.sql.Timestamp
 import java.util.*
 
 fun RoomShoppingList.convertToRemoteCreateShoppingList(familyID: Int?): RemoteCreateShoppingList {
@@ -17,11 +18,11 @@ fun RemoteGetShoppingList.convertToRoomShoppingList(items: List<RemoteGetShoppin
             roomItems.add(item.convertToRoomShoppingListItem())
         }
     }
-    return RoomShoppingList(id = id, name = name, items = roomItems)
+    return RoomShoppingList(id = id, name = name, items = roomItems, lastModTime = lastModTime ?: Timestamp(System.currentTimeMillis()))
 }
 
 fun RemoteGetShoppingItem.convertToRoomShoppingListItem(): RoomShoppingListItem {
-    return RoomShoppingListItem(id = id, name = name, done = done)
+    return RoomShoppingListItem(id = id, name = name, done = done, lastModTime = lastModTime ?: Timestamp(System.currentTimeMillis()))
 }
 
 fun RemoteGetUser.convertToUser(): User {
@@ -46,7 +47,7 @@ fun RoomShoppingList.convertToRemoteShoppingList(): RemoteShoppingList {
         name = name,
         family = null,
         users = null,
-        //lastModTime = lastModTime,
+        lastModTime = lastModTime,
         remoteShoppingItems = items.convertToRemoteListOfShoppingItems()
     )
 }
@@ -59,7 +60,7 @@ fun List<RoomShoppingListItem>.convertToRemoteListOfShoppingItems(): List<Remote
                 id = item.id,
                 name = item.name,
                 done = item.done,
-                //lastModTime = item.lastModTime,
+                lastModTime = item.lastModTime,
                 remoteShoppingList = null
             )
         )

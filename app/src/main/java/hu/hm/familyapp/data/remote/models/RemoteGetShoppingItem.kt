@@ -1,5 +1,6 @@
 package hu.hm.familyapp.data.remote.models
 
+import java.sql.Timestamp
 import java.util.Date
 
 data class RemoteGetShoppingItem(
@@ -7,5 +8,5 @@ data class RemoteGetShoppingItem(
     val name: String,
     val done: Boolean,
     var shoppingListID: Int?,
-    val lastModTime: Date? = null,
+    val lastModTime: Timestamp? = null,
 )

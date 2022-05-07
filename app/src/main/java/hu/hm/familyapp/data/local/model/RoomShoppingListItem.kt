@@ -2,7 +2,7 @@ package hu.hm.familyapp.data.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.sql.Date
+import java.sql.Timestamp
 
 @Entity
 data class RoomShoppingListItem(
@@ -10,5 +10,5 @@ data class RoomShoppingListItem(
     val id: Int,
     val name: String,
     var done: Boolean,
-    //val lastModTime: Date? = Date(System.currentTimeMillis())
+    val lastModTime: Timestamp
 )

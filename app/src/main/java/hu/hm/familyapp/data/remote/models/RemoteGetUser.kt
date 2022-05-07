@@ -1,5 +1,6 @@
 package hu.hm.familyapp.data.remote.models
 
+import java.sql.Timestamp
 import java.util.Date
 
 data class RemoteGetUser(
@@ -14,5 +15,5 @@ data class RemoteGetUser(
     var familyID: Int? = null,
     var inviteID: Int? = null,
     var shoppingListIDs: List<Int>? = null,
-    val lastModTime: Date? = null
+    val lastModTime: Timestamp? = null
 )

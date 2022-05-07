@@ -158,4 +158,49 @@ interface FamilyAPI {
         @Path("listID") listID: Int,
         @Path("itemID") itemID: Int
     )
+
+    // EVENTS
+
+    @GET("$url/event/{eventID}")
+    suspend fun getEvent(
+        @Path("eventID") eventID: Int
+    ): RemoteEvent
+
+    @PUT("$url/event/{eventID}")
+    suspend fun editEvent(
+        @Path("eventID") eventID: Int,
+        @Body event: RemoteEvent
+    )
+
+    @DELETE("$url/event/{eventID}")
+    suspend fun deleteEvent(
+        @Path("eventID") eventID: Int
+    )
+
+    @GET("$url/event/byfamily/{familyID}")
+    suspend fun getEventsByFamily(
+        @Path("familyID") familyID: Int
+    ): List<RemoteEvent>
+
+    @GET("$url/event/byuser/{userID}")
+    suspend fun getEventsByUser(
+        @Path("userID") userID: Int
+    ): List<RemoteEvent>
+
+    @POST("$url/event/create")
+    suspend fun createEvent(
+        @Body event: RemoteEvent
+    ): RemoteEvent
+
+    @PUT("$url/event/adduser/{eventID}/{userID}")
+    suspend fun addUserToEvent(
+        @Path("eventID") eventID: Int,
+        @Path("userID") userID: Int
+    )
+
+    @PUT("$url/event/removeUser/{eventID}/{userID}")
+    suspend fun removeUserFromEvent(
+        @Path("eventID") eventID: Int,
+        @Path("userID") userID: Int
+    )
 }

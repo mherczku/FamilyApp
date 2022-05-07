@@ -1,5 +1,6 @@
 package hu.hm.familyapp.data.remote.models
 
+import java.sql.Timestamp
 import java.util.*
 
 data class RemoteShoppingList(
@@ -7,6 +8,6 @@ data class RemoteShoppingList(
     val name: String,
     val family: RemoteFamily?,
     var users: List<RemoteUser>? = null,
-    val lastModTime: Date? = null,
+    val lastModTime: Timestamp? = null,
     val remoteShoppingItems: List<RemoteShoppingItem>? = null
 )

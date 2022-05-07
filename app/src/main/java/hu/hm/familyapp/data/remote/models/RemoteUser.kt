@@ -1,5 +1,6 @@
 package hu.hm.familyapp.data.remote.models
 
+import java.sql.Timestamp
 import java.util.*
 
 data class RemoteUser(
@@ -10,6 +11,6 @@ data class RemoteUser(
     val firstname: String? = null,
     val lastname: String? = null,
     val username: String? = null,
-    val lastModTime: Date? = null,
+    val lastModTime: Timestamp? = null,
     val category: String? = null
 )
