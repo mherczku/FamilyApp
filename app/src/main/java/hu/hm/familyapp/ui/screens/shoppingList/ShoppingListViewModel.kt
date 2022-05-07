@@ -14,6 +14,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.sql.Timestamp
 
 @HiltViewModel
 class ShoppingListViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
@@ -44,7 +45,8 @@ class ShoppingListViewModel @Inject constructor(private val repository: Reposito
                 RoomShoppingListItem(
                     id = Random().nextInt(),
                     name = newName.value,
-                    done = false
+                    done = false,
+                    lastModTime = Timestamp(System.currentTimeMillis())
                 )
             )
             loadLists(theListID)

@@ -10,5 +10,5 @@ data class RemoteEvent(
     val end: Timestamp,
     val start: Timestamp,
     val userID: Int,
-    val familyID: Int
+    val familyID: Int?
 )

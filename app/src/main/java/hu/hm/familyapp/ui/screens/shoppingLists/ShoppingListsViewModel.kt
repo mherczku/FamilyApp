@@ -11,6 +11,7 @@ import hu.hm.familyapp.repository.Repository
 import java.util.*
 import javax.inject.Inject
 import kotlinx.coroutines.launch
+import java.sql.Timestamp
 
 @HiltViewModel
 class ShoppingListsViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
@@ -37,11 +38,12 @@ class ShoppingListsViewModel @Inject constructor(private val repository: Reposit
 
     fun addNewList() {
         viewModelScope.launch {
-            val response = repository.addShoppingList(
+            repository.addShoppingList(
                 RoomShoppingList(
                     id = Random().nextInt(),
                     name = newName.value,
-                    items = listOf()
+                    items = listOf(),
+                    lastModTime = Timestamp(System.currentTimeMillis())
                 )
             )
             loadLists()

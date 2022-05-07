@@ -2,7 +2,6 @@ package hu.hm.familyapp.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -14,6 +13,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import hu.hm.familyapp.ui.components.BottomNavigationBar
+import hu.hm.familyapp.ui.screens.events.EventsScreen
 import hu.hm.familyapp.ui.screens.login.LoginScreen
 import hu.hm.familyapp.ui.screens.register.RegisterScreen
 import hu.hm.familyapp.ui.screens.settings.FamilyMemberScreen
@@ -72,7 +72,7 @@ fun ActivityScreen() {
             }
 
             composable(NavScreen.Events.route) {
-                Text("Under development")
+                EventsScreen(navController)
             }
         }
     }

@@ -1,7 +1,5 @@
 package hu.hm.familyapp.ui.screens.shoppingList
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
