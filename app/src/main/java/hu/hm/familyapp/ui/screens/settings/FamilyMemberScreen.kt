@@ -46,7 +46,7 @@ fun FamilyMemberScreen(
         )
         Spacer(Modifier.padding(16.dp))
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            ProfileImage(img = "avatar.png")
+            ProfileImage(img = "https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png")
         }
         Spacer(Modifier.padding(16.dp))
         Text(
@@ -96,35 +96,7 @@ fun FamilyMemberScreen(
             text = viewModel.user.value.email,
             fontSize = 20.sp,
         )
-        Spacer(Modifier.padding(16.dp))
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            OutlinedTextField(
-                value = viewModel.category.value.name,
-                onValueChange = { viewModel.menuExpanded.value = false },
-                readOnly = true,
-                trailingIcon = {
-                    Icon(
-                        Icons.Default.ArrowDropDown, "",
-                        modifier = Modifier.clickable { viewModel.menuExpanded.value = true }
-                    )
-                }
-            )
-            DropdownMenu(
-                expanded = viewModel.menuExpanded.value,
-                onDismissRequest = { viewModel.menuExpanded.value = false }
-            ) {
-                DropdownMenuItem(onClick = {
-                    viewModel.category.value = UserCategory(name = "Adult")
-                }) {
-                    Text("Adult")
-                }
-                DropdownMenuItem(onClick = {
-                    viewModel.category.value = UserCategory(name = "Child")
-                }) {
-                    Text("Child")
-                }
-            }
-        }
+
         Spacer(Modifier.padding(16.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             OutlinedButton(
@@ -132,7 +104,7 @@ fun FamilyMemberScreen(
                 shape = MaterialTheme.shapes.medium
             ) {
                 // Icon(SaveIcon) TODO saveIcon
-                Text(text = "Save")
+                Text(text = "Remove from family")
             }
         }
     }

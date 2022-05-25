@@ -37,7 +37,7 @@ fun ActivityScreen() {
         NavHost(
             modifier = Modifier.padding(bottom = it.calculateBottomPadding()),
             navController = navController,
-            startDestination = NavScreen.Login.route
+            startDestination = NavScreen.Events.route
         ) {
             composable(NavScreen.Login.route) {
                 LoginScreen(navController = navController)

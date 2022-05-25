@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.hm.familyapp.data.model.ShoppingList
 import hu.hm.familyapp.data.remote.models.RemoteEvent
 import hu.hm.familyapp.repository.Repository
 import java.sql.Timestamp
@@ -29,8 +28,12 @@ class EventsViewModel @Inject constructor(private val repository: Repository) : 
     private fun loadEvents() {
         viewModelScope.launch {
             val list = repository.getEventsByUser()
-            if(list != null) items.postValue(list)
+            if (list != null) items.postValue(list)
             else items.postValue(listOf())
+            val mock = mutableListOf<RemoteEvent>()
+            mock.add(RemoteEvent(1, "Étkező", "", "Vacsora", Timestamp(10), Timestamp(20), 1, 1))
+            mock.add(RemoteEvent(1, "János-hegy", "", "Kirándulás", Timestamp(10), Timestamp(20), 1, 1))
+            items.postValue(mock)
         }
     }
 

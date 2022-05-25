@@ -27,9 +27,10 @@ class Repository @Inject constructor(
     private val familyDao: FamilyDao,
     private val familyAPI: FamilyAPI
 ) {
-    var deviceOnline: Boolean = isNetAvailable()
+    var deviceOnline: Boolean = false
     var currentUser: RemoteGetUser? = null
     val sharedPreferences: SharedPreferences = context.getSharedPreferences("family", Context.MODE_PRIVATE)
+
 
     @SuppressLint("MissingPermission")
     fun isNetAvailable(): Boolean {
@@ -68,7 +69,7 @@ class Repository @Inject constructor(
     }
 
     suspend fun login(email: String, password: String) = withContext(Dispatchers.IO) {
-        if (deviceOnline) {
+        if (true) {
             try {
                 Timber.d("Logging in with $email")
                 currentUser = familyAPI.login(RemoteCreateUser(password, email))

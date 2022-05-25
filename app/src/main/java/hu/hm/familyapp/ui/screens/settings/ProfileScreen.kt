@@ -48,22 +48,7 @@ fun ProfileScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.End
-        ) {
-            OutlinedButton(
-                onClick = { /*TODO viewModel.save()*/ },
-                shape = MaterialTheme.shapes.medium,
 
-            ) {
-                if (viewModel.loading.value) {
-                }
-                Text("Save")
-            }
-        }
         Spacer(modifier = Modifier.padding(8.dp))
         Text("Profile Settings", textAlign = TextAlign.Center, fontSize = 32.sp)
         Spacer(modifier = Modifier.padding(16.dp))
@@ -140,6 +125,26 @@ fun ProfileScreen(
             },
         )
         Spacer(modifier = Modifier.padding(8.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            OutlinedButton(
+                onClick = {  },
+                shape = MaterialTheme.shapes.medium,
+            ) {
+                Text("Logout")
+            }
+            Spacer(modifier = Modifier.padding(30.dp))
+            OutlinedButton(
+                onClick = { /*TODO viewModel.save()*/ },
+                shape = MaterialTheme.shapes.medium,
+            ) {
+                Text("Save")
+            }
+        }
     }
 }
 

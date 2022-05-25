@@ -67,36 +67,25 @@ fun HasFamily(viewModel: FamilyViewModel, navController: NavController) {
         )
         Spacer(modifier = Modifier.padding(16.dp))
         Text(
-            text = "Adults:",
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = "Members:",
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
             ),
             fontSize = 30.sp,
         )
+        Spacer(modifier = Modifier.padding(8.dp))
         viewModel.adults.forEach { adult ->
             NameCard(adult, navController)
         }
-        Divider(Modifier.padding(vertical = 8.dp))
-        Text(
-            text = "Children:",
-            style = TextStyle(
-                fontWeight = FontWeight.Bold,
-            ),
-            fontSize = 30.sp,
-        )
-        viewModel.children.forEach { child ->
-            NameCard(child, navController)
-        }
-        Divider(Modifier.padding(vertical = 8.dp))
-        Text(
-            text = "Pets:",
-            style = TextStyle(
-                fontWeight = FontWeight.Bold,
-            ),
-            fontSize = 30.sp,
-        )
-        viewModel.pets.forEach { pet ->
-            NameCard(pet, navController)
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            OutlinedButton(
+                onClick = {},
+                shape = MaterialTheme.shapes.medium
+            ) {
+                // Icon(SaveIcon) TODO saveIcon
+                Text(text = "Add member")
+            }
         }
     }
 }
@@ -108,7 +97,7 @@ fun NameCard(name: String = "Name", navController: NavController) {
             .fillMaxWidth()
             .padding(8.dp),
         elevation = 10.dp,
-        shape = MaterialTheme.shapes.small
+        shape = MaterialTheme.shapes.medium
     ) {
         Row(
             modifier = Modifier

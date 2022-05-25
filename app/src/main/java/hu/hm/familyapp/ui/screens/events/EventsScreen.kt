@@ -13,8 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -59,9 +58,9 @@ fun EventsScreen(
                         start.linkTo(parent.start)
                     }
             ) {
-                items(lists.value) { shoppingList ->
-                    key(shoppingList.id) {
-                        ShoppingList(navController, shoppingList, viewModel)
+                items(lists.value) { event ->
+                    key(event.id) {
+                        Event(navController, event, viewModel)
                     }
                 }
             }
@@ -131,7 +130,7 @@ fun EventsScreen(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun ShoppingList(
+private fun Event(
     navController: NavController = rememberNavController(),
     event: RemoteEvent,
     viewModel: EventsViewModel = hiltViewModel()
@@ -199,12 +198,24 @@ private fun Inside(
         ).value,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 24.dp)
+            .padding()
     ) {
-        Text(
-            text = event.name,
-            fontSize = 20.sp,
-        )
+        Column() {
+            Row() {
+                Icon(Icons.Filled.Notifications, "", modifier = Modifier.padding(start = 20.dp, end=20.dp, top = 40.dp))
+                Text(
+                    text = event.name,
+                    fontSize = 30.sp,
+                )
+            }
+            Row(modifier = Modifier.padding(horizontal = 70.dp, vertical = 5.dp)) {
+                Icon(Icons.Filled.ShareLocation, "", modifier = Modifier.padding(end=5.dp, top = 2.dp))
+                Text(
+                    text = event.location,
+                    fontSize = 20.sp,
+                )
+            }
+        }
     }
 }
 

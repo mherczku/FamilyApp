@@ -76,6 +76,18 @@
 
 ### Tizenkettedik hét:
 
+- [x] Összes teszt sikeres lefutású
+- [x] Új funkció: Események tervezése
+
 ### Tizenharmadik hét:
 
+- [x] Események felület elkészítése
+- [x] Események logika implementálása
+- [x] Új funkciók tesztelése
+
 ### Tizennegyedik hét:
+
+- [x] Alkalmazás befejezése
+- [x] Felhasználói teszt
+- [x] Apró hiba javítások
+- [x] Dokumentáció + prezentáció készítés

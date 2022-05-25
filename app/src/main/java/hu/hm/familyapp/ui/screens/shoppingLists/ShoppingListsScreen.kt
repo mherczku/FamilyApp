@@ -15,6 +15,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -201,12 +202,15 @@ private fun Inside(
         ).value,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 24.dp)
+            .padding(horizontal = 24.dp)
     ) {
-        Text(
-            text = shoppingList.name,
-            fontSize = 20.sp,
-        )
+        Row() {
+            Icon(Icons.Filled.ShoppingCart, "", modifier = Modifier.padding(start = 20.dp, top = 15.dp))
+            Text(
+                text = shoppingList.name,
+                fontSize = 30.sp,
+            )
+        }
     }
 }
 
